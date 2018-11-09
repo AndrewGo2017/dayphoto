@@ -162,17 +162,18 @@ function showUserAuthDialog(hasCloseBtn) {
         // userAuthDialog.load("index/user", function () {
         //     $('#authDialog').modal();
         // });
-    const btnClose = $('#btn-close');
-    if (hasCloseBtn){
-        btnClose.removeClass('invisible');
-    } else{
-        btnClose.addClass('invisible');
-    }
 
     $.ajax({
         url: 'index/user',
         success: function (data) {
             userAuthDialog.html(data);
+
+            const btnClose = $('#btn-close');
+            if (hasCloseBtn){
+                btnClose.removeClass('invisible');
+            } else{
+                btnClose.addClass('invisible');
+            }
 
             $("#modalTitle").html('Выбор пользователя');
             $('#authDialog').modal();
