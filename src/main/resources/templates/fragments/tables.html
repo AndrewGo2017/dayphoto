@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+
+<!--User-->
+<div th:fragment="userList">
+    <table class="display main-table table table-striped table-bordered " style="width:100%">
+        <thead class="thead-dark">
+        <tr>
+            <th></th>
+            <th></th>
+
+            <th>#</th>
+            <th>Id</th>
+            <th>Имя</th>
+            <th>Пароль</th>
+            <th>Почта</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--/*@thymesVar id="users" type="java.util.List<ru.sber.dayphoto.model.User>"*/-->
+        <tr th:each="user,iter: ${users}">
+            <td>
+                <button class="btn btn-dark" th:onclick="|updateRow('${user.id}')|">Редактировать
+                    <span class='ui-icon ui-icon-gear' aria-hidden='true'></span></button>
+            </td>
+            <td>
+                <button class="btn btn-dark" th:onclick="|removeRow('${user.id}')|">Удалить
+                    <span class='ui-icon ui-icon-trash' aria-hidden='true'></span></button>
+            </td>
+            <td th:text="${iter.count}"></td>
+            <td th:text="${user.id}"></td>
+            <td th:utext="${user.name}"></td>
+            <td th:utext="${user.password}"></td>
+            <td th:utext="${user.email}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!--ActivityGroup-->
+<div th:fragment="activityGroupList">
+    <table class="display main-table table table-striped table-bordered " style="width:100%">
+        <thead class="thead-dark">
+        <tr>
+            <th></th>
+            <th></th>
+
+            <th>#</th>
+            <th>Id</th>
+            <th>Имя</th>
+            <th>Активная</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--/*@thymesVar id="activityGroups" type="java.util.List<ru.sber.dayphoto.model.ActivityGroup>"*/-->
+        <tr th:each="activityGroup,iter: ${activityGroups}">
+            <td>
+                <button class="btn btn-dark" th:onclick="|updateRow('${activityGroup.id}')|">Редактировать
+                    <span class='ui-icon ui-icon-gear' aria-hidden='true'></span></button>
+            </td>
+            <td>
+                <button class="btn btn-dark" th:onclick="|removeRow('${activityGroup.id}')|">Удалить
+                    <span class='ui-icon ui-icon-trash' aria-hidden='true'></span></button>
+            </td>
+            <td th:text="${iter.count}"></td>
+            <td th:text="${activityGroup.id}"></td>
+            <td th:utext="${activityGroup.name}"></td>
+            <td th:utext="${activityGroup.isActive != null} ? ${activityGroup.isActive ? 'да' : 'нет'} : 'нет'"></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!--Activity-->
+<div th:fragment="activityList">
+    <table class="display main-table table table-striped table-bordered " style="width:100%">
+        <thead class="thead-dark">
+        <tr>
+            <th></th>
+            <th></th>
+
+            <th>#</th>
+            <th>Id</th>
+            <th>Имя</th>
+            <th>Группа</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--/*@thymesVar id="activity" type="java.util.List<ru.sber.dayphoto.model.Activity>"*/-->
+        <tr th:each="activity,iter: ${activities}">
+            <td>
+                <button class="btn btn-dark" th:onclick="|updateRow('${activity.id}')|">Редактировать
+                    <span class='ui-icon ui-icon-gear' aria-hidden='true'></span></button>
+            </td>
+            <td>
+                <button class="btn btn-dark" th:onclick="|removeRow('${activity.id}')|">Удалить
+                    <span class='ui-icon ui-icon-trash' aria-hidden='true'></span></button>
+            </td>
+            <td th:text="${iter.count}"></td>
+            <td th:text="${activity.id}"></td>
+            <td th:utext="${activity.name}"></td>
+            <td th:utext="${activity.activityGroup.name}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!--Statistic-->
+<div th:fragment="statisticList">
+    <table class="display main-table table table-striped table-bordered " style="width:100%">
+        <thead class="thead-dark">
+        <tr>
+            <th>#</th>
+            <th>Пользователь</th>
+            <th>Группа</th>
+            <th>Активность</th>
+            <th>Время</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--/*@thymesVar id="statistics" type="List<java.util.List<ru.sber.dayphoto.to.UserTotalDayTimeByActivityTo>"*/-->
+        <tr th:each="statistic,iter: ${statistics}">
+            <td th:text="${iter.count}"></td>
+            <td th:utext="${statistic.userName}"></td>
+            <td th:utext="${statistic.activityName}"></td>
+            <td th:utext="${statistic.activityGroupName}"></td>
+            <td th:utext="${statistic.time}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--Statistic1 -->
+<div th:fragment="statistic1List">
+    <table class="display main-table table table-striped table-bordered " style="width:100%">
+        <thead class="thead-dark">
+        <tr>
+            <th>#</th>
+            <th>Пользователь</th>
+            <th>Группа</th>
+            <th>Время</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--/*@thymesVar id="statistics" type="List<java.util.List<ru.sber.dayphoto.to.UserTotalDayTimeByActivityTo>"*/-->
+        <tr th:each="statistic,iter: ${statistics}">
+            <td th:text="${iter.count}"></td>
+            <td th:utext="${statistic.userName}"></td>
+            <td th:utext="${statistic.activityGroupName}"></td>
+            <td th:utext="${statistic.time}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

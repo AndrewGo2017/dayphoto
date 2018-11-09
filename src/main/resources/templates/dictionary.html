@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/main :: header">
+</head>
+<body th:style="'background:url(' + @{/pic/bg.jpg} + ');'">
+
+<div th:replace="fragments/main :: navbar"></div>
+
+<div class="container">
+    <h1 th:text="${contractName != null} ? | ${title} (${contractName})| : ${title}"></h1>
+
+    <button id="add" class="btn btn-primary" onclick="create()"
+            th:classappend="${hideAddButton != null ? 'invisible' : ''}">Добавить
+        <span class='ui-icon ui-icon-circle-plus' aria-hidden='true'></span></button>
+    <br/><br/>
+    <div id="mainTable"></div>
+    <div class="ui-front" th:classappend="${noEdit != null ? 'noEdit' : ''}">
+        <div id="dialog"></div>
+    </div>
+    <div th:replace="fragments/main :: dialog-confirm"></div>
+
+    <!--<input th:value="${tableCondition != null} ? ${tableCondition} : '' " class="dialog-data" type="hidden" name="tableCondition" id="tableCondition">-->
+
+</div>
+</body>
+</html>

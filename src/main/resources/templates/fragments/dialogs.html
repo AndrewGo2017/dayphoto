@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--User-->
+<div th:fragment="userDialog" class="modal fade" id="editRow">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="detailsForm">
+                    <!--/*@thymesVar id="user" type="ru.sber.dayphoto.model.User"*/-->
+                    <input type="hidden" id="id" name="id" th:value="${user != null} ? ${user.id} : '' " >
+
+                    <div class="form-group">
+                        <label for="name" class="control-label col-xs-3">Имя</label>
+
+                        <div class="col-xs-9">
+                            <input th:value="${user != null} ? ${user.name} : '' " class="dialog-data form-control"
+                                   name="name" id="name"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name" class="control-label col-xs-3">Почта</label>
+
+                        <div class="col-xs-9">
+                            <!--<input type="text" class="form-control" id="name" name="name"/>-->
+
+                            <input th:value="${user != null} ? ${user.email} : '' " class="dialog-data form-control"
+                                   name="email" id="email"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name" class="control-label col-xs-3">Почта</label>
+
+                        <div class="col-xs-9">
+                            <input th:value="${user != null} ? ${user.password} : '' " class="dialog-data form-control"
+                                   name="password" id="password"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-offset-3 col-xs-9">
+                            <button type="button" onclick="save()" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true">Сохранить</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--ActivityGroup-->
+<div th:fragment="activityGroupDialog" class="modal fade" id="editRow">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="detailsForm">
+                    <!--/*@thymesVar id="activityGroup" type="ru.sber.dayphoto.model.ActivityGroup"*/-->
+                    <input type="hidden" id="id" name="id" th:value="${activityGroup != null} ? ${activityGroup.id} : '' " >
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-3">Наименование</label>
+
+                        <div class="col-xs-9">
+                            <input th:value="${activityGroup != null} ? ${activityGroup.name} : '' " class="dialog-data form-control"
+                                   name="name" id="name"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-3">Активная</label>
+
+                        <input type="checkbox" th:checked="${activityGroup != null} ? ${activityGroup.isActive} : false "
+                               class="dialog-data form-control" name="isActive"/>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-offset-3 col-xs-9">
+                            <button type="button" onclick="save()" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true">Сохранить</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Activity-->
+<div th:fragment="activityDialog" class="modal fade" id="editRow">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="detailsForm">
+                    <!--/*@thymesVar id="activity" type="ru.sber.dayphoto.model.Activity"*/-->
+                    <input type="hidden" id="id" name="id" th:value="${activity != null} ? ${activity.id} : '' " >
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-3">Наименование</label>
+
+                        <div class="col-xs-9">
+                            <input th:value="${activity != null} ? ${activity.name} : '' " class="dialog-data form-control"
+                                   name="name" id="name"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group no-displayable">
+                        <label class="control-label col-xs-3">Группа</label>
+
+                        <div class="col-xs-9">
+                            <select class="btn btn-outline-dark parameterized dialog-data form-control" name="activityGroup">
+                                <option th:each="activityGroup : ${activityGroups}"
+                                        th:value="${activityGroup.id}"
+                                        th:text="${activityGroup.name}"
+                                        th:selected="${activity != null ? activity.activityGroup.id == activityGroup.id : false}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-offset-3 col-xs-9">
+                            <button type="button" onclick="save()" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true">Сохранить</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+

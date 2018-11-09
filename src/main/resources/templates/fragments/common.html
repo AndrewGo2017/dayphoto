@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<!--/*@thymesVar id="totalTime" type="java.lang.String"*/-->
+<span id="totalTime" th:fragment="fragment" th:text="${totalTime}"></span>
+
+<div id="accordionRoot" th:fragment="accordion" class="accordion">
+    <!--/*@thymesVar id="accordion" type="ru.sber.dayphoto.handler.accordion.Accordion"*/-->
+    <!--/*@thymesVar id="accordions" type="java.util.List<ru.sber.dayphoto.handler.accordion.Accordion>"*/-->
+    <div th:each=" accordion : ${accordions}" class="card">
+        <div class="card-header" th:id="${accordion.cardHeaderId}">
+            <h5 class="mb-0">
+                <button th:text="${accordion.cardHeaderBtnContent}" class="btn btn-outline-dark btn-xxl" type="button"
+                        data-toggle="collapse"
+                        aria-expanded="true"
+                        th:attr="aria-controls=${accordion.bodyCardId},data-target='#' + ${accordion.bodyCardId}">
+                </button>
+            </h5>
+        </div>
+
+        <div th:id="${accordion.bodyCardId}" class="collapse collapse-parent"
+             th:attr="aria-labelledby=${accordion.cardHeaderId}" data-parent="#accordionRoot">
+
+            <div class="card-body">
+                <div class="accordion" th:id="${accordion.nameId}">
+                    <div class="card" th:each="accordionNested : ${accordion.accordionNestedList}">
+                        <div th:id="${accordionNested.headingNameID}">
+                            <h5 class="mb-0">
+                                <button th:text="${accordionNested.cardHeaderBtnContent}" class="btn btn-dark btn-xl"
+                                        type="button" data-toggle="collapse"
+                                        aria-expanded="true"
+                                        th:attr="aria-controls=${accordionNested.bodyCardId},data-target='#' + ${accordionNested.bodyCardId}">
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div th:id="${accordionNested.bodyCardId}" class="collapse collapse-child"
+                             th:attr="aria-labelledby=${accordionNested.headingNameID},data-parent='#' + ${accordion.nameId}"
+                        >
+                            <div class="card-body">
+                                <div class="timer" th:id="${accordionNested.timerId}"></div>
+                                <div class="current" th:id="${accordionNested.currentId}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--User Auth-->
+<div th:fragment="authDialog" class="modal fade" id="authDialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <button id="btn-close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="detailsForm">
+                    <div class="form-group no-displayable">
+                        <label class="control-label col-xs-3">Группа</label>
+
+                        <div class="col-xs-9">
+                            <!--/*@thymesVar id="accordions" type="java.util.List<ru.sber.dayphoto.handler.accordion.User>"*/-->
+                            <select class="btn btn-outline-dark dialog-data form-control" name="user" id="user">
+                                <option th:each="user : ${users}"
+                                        th:value="${user.id}"
+                                        th:text="${user.name}">
+                                        <!--th:selected="${users != null ? user.id : false}">-->
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-offset-3 col-xs-9">
+                            <button type="button" onclick="createUserCookie()" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true">Сохранить</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+body{
+    /*width: 75%;*/
+    /*margin: 40px auto;*/
+    /*padding-top: 70px;*/
+}
+
+.btn-xl {
+    width:400px;    //Specify your width here
+}
+
+.btn-xxl {
+    width:500px;    //Specify your width here
+}

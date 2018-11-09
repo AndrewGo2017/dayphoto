@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/main :: header">
+</head>
+<body th:style="'background:url(' + @{/pic/bg.jpg} + ');'">
+<link rel="stylesheet" href="webjars/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker3.css">
+<script type="text/javascript" src="webjars/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="webjars/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.ru.min.js"></script>
+<script type="text/javascript" th:src="@{/js/statistic.js}"></script>
+
+
+<div th:replace="fragments/main :: navbar"></div>
+
+<div class="container">
+    <h1 th:text="${contractName != null} ? | ${title} (${contractName})| : ${title}"></h1>
+
+    <table>
+        <tr>
+            <td style="color: #FFFFFF;">
+                С
+            </td>
+            <td>
+                <div style="width: 120px" class='input-group date' id='datetimepickerFrom'>
+                    <input id="datetimepickerFromText" type='text' class="form-control"/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="color: #FFFFFF;">
+                ПО
+            </td>
+            <td>
+                <div style="width: 120px" class='input-group date' id='datetimepickerTo'>
+                    <input id="datetimepickerToText" type='text' class="form-control"/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <select class="btn btn-dark" id="statisticType">
+                    <option value="1">По активностям</option>
+                    <option value="2">По группам</option>
+                </select>
+            </td>
+            <td>
+                <button style="width: 120px"  id="resultType" class="btn btn-dark" onclick="changeResult()">Загрузить
+                    <span class='ui-icon ui-icon-circle-plus' aria-hidden='true'></span>
+                </button>
+            </td>
+        </tr>
+    </table>
+
+
+    <br/><br/>
+    <div id="mainTable"></div>
+    <div class="ui-front" th:classappend="${noEdit != null ? 'noEdit' : ''}">
+        <div id="dialog"></div>
+    </div>
+    <div th:replace="fragments/main :: dialog-confirm"></div>
+
+    <!--<input th:value="${tableCondition != null} ? ${tableCondition} : '' " class="dialog-data" type="hidden" name="tableCondition" id="tableCondition">-->
+
+</div>
+</body>
+</html>
