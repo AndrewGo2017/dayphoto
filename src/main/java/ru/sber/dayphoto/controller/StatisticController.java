@@ -48,7 +48,9 @@ public class StatisticController {
     public String getAllTotal(Model m,
                               @PathVariable("type") Integer type,
                               @PathVariable("from") @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate from,
-                              @PathVariable("to") @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate to){
+                              @PathVariable("to") @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate to) throws InterruptedException {
+        Thread.sleep(300);
+
         List<UserStatisticTimeTo> statistics;
         if (type == 1){
             statistics = statisticService.getAllUserTotalDayTimeWithActivityDetails(from, to);

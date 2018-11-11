@@ -29,6 +29,14 @@ function setMainTable(isSearching, isPaging) {
         }
     });
 
+    let searchValue = '';
+    if (entity === 'statistic'){
+        const userName = getCookie('un');
+        if (userName !== null && userName !== ''){
+            searchValue = userName;
+        }
+    }
+
     const table = $('.main-table');
     table.DataTable({
         searching : isSearching,
@@ -58,7 +66,7 @@ function setMainTable(isSearching, isPaging) {
             { "width": "100px", "targets": 0 },
             { "width": "70px", "targets": 1 }
         ]
-    });
+    }).search(searchValue).draw();
     table.css('background-color', 'white');
     // $('body').removeClass('invisible');
 }
@@ -80,8 +88,7 @@ function updateRow(id) {
             $('#editRow').modal();
         },
         error:function (xhr) {
-            const err = JSON.parse(xhr.responseText);
-            showErrorMessage(err.message, 'Ошибка ' + err.status);
+            showMessage('Ошибка ' + xhr.status, xhr.responseText);
         },
         complete:function(){
             // showLoadEffect(false);
@@ -105,22 +112,19 @@ function save() {
 }
 
 function removeRow(id) {
-    var deleteRow = "deleteRow('" + id + "')";
-    $('#btnDeleteContract').attr('onclick', deleteRow);
+    const deleteRow = "deleteRow('" + id + "')";
+    showConfirm('Удаление', 'Вы уверены, что хотите удалить элемент?', deleteRow);
+}
 
+function showConfirm(header, text, onConfirm) {
+    $('#confirmDialogHeader').text(header);
+    $('#confirmDialogText').find('p').text(text);
+    $('#btnYesConfirm').attr('onclick', onConfirm);
     $('#confirmDialog').modal();
 }
 
 function create() {
-
     updateRow(0);
-
-    // $('#detailsForm').find(":input").val("");
-    // $("#editRow").modal();
-    //
-    // $("#modalTitle").html(i18n["addTitle"]);
-    // form.find(":input").val("");
-    // $("#editRow").modal();
 }
 
 function deleteRow(id) {
@@ -131,9 +135,10 @@ function deleteRow(id) {
         fillMainTable();
         // successNoty("common.deleted");
         $('#confirmDialog').modal('hide');
+    }).fail(function (xhr) {
+        showMessage('Ошибка ' + xhr.status, xhr.responseText);
     });
 }
-
 
 function getValueFromUrl(str, isAlphabetic) {
     const afterSymStr = location.href.substr(location.href.lastIndexOf(str) + str.length);
@@ -144,4 +149,23 @@ function getValueFromUrl(str, isAlphabetic) {
         return afterSymStr;
     }
 }
+
+function showMessage(header, text) {
+    $('#messageDialogHeader').text(header);
+    $('#messageDialogText').find('p').text(text);
+
+    $('#messageDialog').modal();
+}
+
+function showLoading(isRunning) {
+    const loadingDialog=  $('#loadingDialog');
+    if (isRunning){
+        loadingDialog.modal();
+        console.log('modal');
+    } else {
+        console.log('hide');
+        loadingDialog.modal('hide');
+    }
+}
+
 

@@ -62,10 +62,9 @@
     <div class="ui-front" th:classappend="${noEdit != null ? 'noEdit' : ''}">
         <div id="dialog"></div>
     </div>
-    <div th:replace="fragments/main :: dialog-confirm"></div>
-
-    <!--<input th:value="${tableCondition != null} ? ${tableCondition} : '' " class="dialog-data" type="hidden" name="tableCondition" id="tableCondition">-->
-
+    <div th:replace="fragments/main :: messageDialog"></div>
+    <div th:replace="fragments/main :: loadingDialog"></div>
+    loadingDialog
 </div>
 </body>
 </html>

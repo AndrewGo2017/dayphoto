@@ -10,6 +10,8 @@ $(function () {
 });
 
 function changeResult() {
+    console.log('change result');
+
     const type = $('#statisticType').val();
     const mainTable = $("#mainTable");
 
@@ -20,9 +22,14 @@ function changeResult() {
         return;
 
     if (mainTable.length) {
+
+        showLoading(true);
+
         mainTable.load(entity + '/all/' + type + '/' + datetimepickerFrom + '/' + datetimepickerTo, function () {
             setMainTable();
+            showLoading(false);
         });
+        // $('#loadingDialog').modal('hide');
     } else{
         setMainTable(false, false);
     }

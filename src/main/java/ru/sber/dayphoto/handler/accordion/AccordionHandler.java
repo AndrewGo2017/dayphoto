@@ -32,6 +32,8 @@ public class AccordionHandler {
     
     
     public List<Accordion> getAccordionList (){
+
+        //accordionNested.bodyCardId
         List<Accordion> accordionList = new ArrayList<>();
 
         activityGroupService.getAll().forEach(activityGroup -> {

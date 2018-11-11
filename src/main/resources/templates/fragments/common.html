@@ -71,7 +71,7 @@
                         <label class="control-label col-xs-3">Группа</label>
 
                         <div class="col-xs-9">
-                            <!--/*@thymesVar id="accordions" type="java.util.List<ru.sber.dayphoto.handler.accordion.User>"*/-->
+                            <!--/*@thymesVar id="user" type="java.util.List<ru.sber.dayphoto.model.User>"*/-->
                             <select class="btn btn-outline-dark dialog-data form-control" name="user" id="user">
                                 <option th:each="user : ${users}"
                                         th:value="${user.id}"

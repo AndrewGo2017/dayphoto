@@ -1,22 +1,20 @@
 let timerOn = 0;
 
 $(() => {
-    // setCookie('ui', null, 365);
-    // setCookie('un',  null, 365);
 
     checkUserCookie();
-
+    
     loadingTotalTime(true);
     fillMainTable();
 
     function onStart() {
         const collapseChild = $('.collapse-child');
-        collapseChild.on('hide.bs.collapse', function () {
+        collapseChild.on('hide.bs.collapse', () => {
             timerOn--;
             loading($('#onWorkLoading'), false);
         });
 
-        collapseChild.on('shown.bs.collapse', function () {
+        collapseChild.on('shown.bs.collapse', function() {
             loading($('#onWorkLoading'), true);
             const startDate = new Date();
 
@@ -26,12 +24,13 @@ $(() => {
             timerOn++;
 
             const activityId = this.id.substring(this.id.lastIndexOf('-') + 1);
+
             startTime(startDate, obj.find('.timer'), activityId);
         });
 
         const collapseParent = $('.collapse-parent');
 
-        collapseParent.on('hide.bs.collapse', function (e) {
+        collapseParent.on('hide.bs.collapse', function(e) {
             if ($(this).is(e.target)) {
                 const nested = $(this).find('.collapse-child');
 
@@ -75,24 +74,54 @@ function startTime(startDate, objTimer, activityId) {
         minute = checkTime(minute);
         second = checkTime(second);
         objTimer.text("Время выполнеия " + hour + ":" + minute + ":" + second);
-        t = setTimeout(function () {
+        t = setTimeout(() => {
             startTime(startDate, objTimer, activityId);
         }, 300);
     } else {
         const todayDateStr = addLeadZeroToDate(today, '-');
         const todayTimeStr = addLeadZeroToTime(now, true);
-        const user = getCookie('ui');
 
         checkUserCookie();
         let userId = getCookie('ui');
 
         loadingTotalTime(true);
+
         $.post("index", {"activity": activityId, "date": todayDateStr, "time": todayTimeStr, "user" : userId})
-            .done(function () {
+            .done(() => {
+                const currentNotSavedActivityValue = '13' + '&' + todayDateStr + '&' + todayTimeStr + '&' + userId; //getCookie('ac');
+                if (currentNotSavedActivityValue !== null && currentNotSavedActivityValue.trim() !== ''){
+                    const items = currentNotSavedActivityValue.split('?');
+                    $.each(items, (i, v) =>{
+                       if (v.trim() !== ''){
+                           const entities = v.split('&');
+
+                           const cActivity = entities[0];
+                           const cTodayDateStr = entities[1];
+                           const cTodayTimeStr = entities[2];
+                           const cUserId = entities[3];
+
+                           $.post("index", {"activity": cActivity, "date": cTodayDateStr, "time": cTodayTimeStr, "user" : cUserId})
+                               .done( () => {
+                                    eraseCookie('ac');
+                                    setCookie('ac', '');
+                               })
+                       }
+                    });
+                }
+
+                $('#totalTimeInscription').css('color', 'darkgray');
             })
-            .fail(function () {
+            .fail((xhr) => {
+                const notSavedActivityCookieValue = activityId + '&' + todayDateStr + '&' + todayTimeStr + '&' + userId;
+                const currentNotSavedActivityValue = getCookie('ac');
+                const newNotSavedActivityValue = currentNotSavedActivityValue + '?' + notSavedActivityCookieValue;
+                setCookie('ac', newNotSavedActivityValue);
+
+                $('#totalTimeInscription').css('color', 'firebrick');
+
+                showMessage('Ошибка ' + xhr.status, xhr.responseText);
             })
-            .always(function () {
+            .always(() => {
                 fillMainTable();
             });
         return;
@@ -125,7 +154,7 @@ function addLeadZeroToDate(date, del) {
 function fillMainTable() {
     const mainTable = $("#mainTable");
     const userId = getCookie('ui');
-    mainTable.load("index/fragment/" + userId, function () {
+    mainTable.load("index/fragment/" + userId, () => {
         loadingTotalTime(false);
     });
 }
@@ -159,7 +188,7 @@ function loadAccordion(callBackFunc) {
 
 function showUserAuthDialog(hasCloseBtn) {
       const userAuthDialog = $('#userAuthDialog');
-        // userAuthDialog.load("index/user", function () {
+        // userAuthDialog.load("index/user", () => {
         //     $('#authDialog').modal();
         // });
 
@@ -179,8 +208,7 @@ function showUserAuthDialog(hasCloseBtn) {
             $('#authDialog').modal();
         },
         error:function (xhr) {
-            // const err = JSON.parse(xhr.responseText);
-            // showErrorMessage(err.message, 'Ошибка ' + err.status);
+            showMessage('Ошибка ' + xhr.status, xhr.responseText);
         },
         complete:function(){
             // showLoadEffect(false);

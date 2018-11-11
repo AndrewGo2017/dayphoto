@@ -33,3 +33,5 @@ create table statistics (
   , foreign key (user_id) references users(id)
   , foreign key (activity_id) references activities(id)
 );
+
+select * from statistics

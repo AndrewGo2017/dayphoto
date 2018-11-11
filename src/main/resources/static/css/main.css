@@ -5,9 +5,13 @@ body{
 }
 
 .btn-xl {
-    width:400px;    //Specify your width here
+    width:400px;
 }
 
 .btn-xxl {
-    width:500px;    //Specify your width here
+    width:500px;
+}
+
+.modal p {
+    word-wrap: break-word;
 }
