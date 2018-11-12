@@ -86,9 +86,11 @@ function startTime(startDate, objTimer, activityId) {
 
         loadingTotalTime(true);
 
+        console.log('1 time', todayTimeStr);
+
         $.post("index", {"activity": activityId, "date": todayDateStr, "time": todayTimeStr, "user" : userId})
             .done(() => {
-                const currentNotSavedActivityValue = '13' + '&' + todayDateStr + '&' + todayTimeStr + '&' + userId; //getCookie('ac');
+                const currentNotSavedActivityValue = getCookie('ac');
                 if (currentNotSavedActivityValue !== null && currentNotSavedActivityValue.trim() !== ''){
                     const items = currentNotSavedActivityValue.split('?');
                     $.each(items, (i, v) =>{
