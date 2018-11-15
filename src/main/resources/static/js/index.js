@@ -64,13 +64,14 @@ function startTime(startDate, objTimer, activityId) {
 
     const now = new Date(Math.abs(startDate - today));
 
-    const hour = now.getUTCHours();
-    let minute = now.getMonth();
+    let hour = now.getUTCHours();
+    let minute = now.getMinutes();
     let second = now.getSeconds();
 
     if (timerOn) {
 
         // add a zero in front of numbers<10
+        hour = checkTime(hour);
         minute = checkTime(minute);
         second = checkTime(second);
         objTimer.text("Время выполнеия " + hour + ":" + minute + ":" + second);

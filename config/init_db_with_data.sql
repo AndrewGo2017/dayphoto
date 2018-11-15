@@ -1,5 +1,5 @@
 insert into users (name, password, email)
-values ('user1', 'pass1', 'email1');
+values ('Головко Андрей', '', ''), ('Лаврентьев Владимир', '', ''),  ('Савкин Владимир', '', '');
 
 insert into activity_groups (name, is_active)
 values ('Вывод нового типового офф лайн ПУ', true),
