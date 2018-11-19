@@ -1,15 +1,16 @@
 const entity = getValueFromUrl('/', true);
 
-$(function () {
+$(() => {
     fillMainTable();
 });
 
 const tableCondition = $('#tableCondition').val(); // some condition if all data is not needed
 function fillMainTable() {
+    showLoading(true);
     const str = tableCondition !== undefined ? tableCondition : '';
     const mainTable = $("#mainTable");
     if (mainTable.length) {
-        mainTable.load(entity + '/all' + str, function () {
+        mainTable.load(entity + '/all' + str, () => {
             setMainTable();
         });
     } else{
@@ -68,15 +69,13 @@ function setMainTable(isSearching, isPaging) {
         ]
     }).search(searchValue).draw();
     table.css('background-color', 'white');
-    // $('body').removeClass('invisible');
+    showLoading(false);
 }
 
 function updateRow(id) {
-    // showLoadEffect(true);
-
     $.ajax({
         url: entity + '/' + id,
-        success: function (data) {
+        success: (data) => {
             $("#dialog").html(data);
 
             if (id === 0){
@@ -87,11 +86,8 @@ function updateRow(id) {
 
             $('#editRow').modal();
         },
-        error:function (xhr) {
+        error: (xhr) => {
             showMessage('Ошибка ' + xhr.status, xhr.responseText);
-        },
-        complete:function(){
-            // showLoadEffect(false);
         }
     });
 }
@@ -103,11 +99,9 @@ function save() {
         type: "POST",
         url: "",
         data: dialog_data.serialize()
-    }).done(function () {
+    }).done(() => {
         $("#editRow").modal("hide");
         fillMainTable();
-
-        // successNoty("common.saved");
     });
 }
 
@@ -131,11 +125,10 @@ function deleteRow(id) {
     $.ajax({
         url: entity + "/" + id,
         type: "DELETE"
-    }).done(function () {
+    }).done(() => {
         fillMainTable();
-        // successNoty("common.deleted");
         $('#confirmDialog').modal('hide');
-    }).fail(function (xhr) {
+    }).fail((xhr) => {
         showMessage('Ошибка ' + xhr.status, xhr.responseText);
     });
 }
@@ -161,10 +154,8 @@ function showLoading(isRunning) {
     const loadingDialog=  $('#loadingDialog');
     if (isRunning){
         loadingDialog.modal();
-        console.log('modal');
     } else {
-        console.log('hide');
-        loadingDialog.modal('hide');
+        setTimeout( () => loadingDialog.modal('hide'), 300);
     }
 }
 

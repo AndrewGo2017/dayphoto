@@ -87,8 +87,6 @@ function startTime(startDate, objTimer, activityId) {
 
         loadingTotalTime(true);
 
-        console.log('1 time', todayTimeStr);
-
         $.post("index", {"activity": activityId, "date": todayDateStr, "time": todayTimeStr, "user" : userId})
             .done(() => {
                 const currentNotSavedActivityValue = getCookie('ac');
