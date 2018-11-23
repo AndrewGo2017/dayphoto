@@ -1,7 +1,7 @@
 let timerOn = 0;
 
 $(function () {
-
+    $.ajaxSetup({ cache: false });
     checkUserCookie();
 
     loadingTotalTime(true);
@@ -171,7 +171,7 @@ function fillMainTable() {
     console.log('mainTable', mainTable);
     console.log('userId', userId);
 
-    mainTable.load("index/fragment/" + userId + "?" + new Date().getTime(), function () {
+    mainTable.load("index/fragment/" + userId, function () {
         console.log('load');
 
         console.log('mainTable', mainTable);
