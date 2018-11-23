@@ -1,20 +1,20 @@
 let timerOn = 0;
 
-$(() => {
+$(function () {
 
     checkUserCookie();
-    
+
     loadingTotalTime(true);
     fillMainTable();
 
     function onStart() {
         const collapseChild = $('.collapse-child');
-        collapseChild.on('hide.bs.collapse', () => {
+        collapseChild.on('hide.bs.collapse', function () {
             timerOn--;
             loading($('#onWorkLoading'), false);
         });
 
-        collapseChild.on('shown.bs.collapse', function() {
+        collapseChild.on('shown.bs.collapse', function () {
             loading($('#onWorkLoading'), true);
             const startDate = new Date();
 
@@ -30,7 +30,7 @@ $(() => {
 
         const collapseParent = $('.collapse-parent');
 
-        collapseParent.on('hide.bs.collapse', function(e) {
+        collapseParent.on('hide.bs.collapse', function (e) {
             if ($(this).is(e.target)) {
                 const nested = $(this).find('.collapse-child');
 
@@ -43,7 +43,7 @@ $(() => {
         });
     }
 
-    $('#userName').on('click', (e) => {
+    $('#userName').on('click', function (e) {
         e.preventDefault();
 
         showUserAuthDialog(true);
@@ -75,7 +75,7 @@ function startTime(startDate, objTimer, activityId) {
         minute = checkTime(minute);
         second = checkTime(second);
         objTimer.text("Время выполнеия " + hour + ":" + minute + ":" + second);
-        t = setTimeout(() => {
+        t = setTimeout(function () {
             startTime(startDate, objTimer, activityId);
         }, 300);
     } else {
@@ -87,32 +87,41 @@ function startTime(startDate, objTimer, activityId) {
 
         loadingTotalTime(true);
 
-        $.post("index", {"activity": activityId, "date": todayDateStr, "time": todayTimeStr, "user" : userId})
-            .done(() => {
+        $.post("index", {"activity": activityId, "date": todayDateStr, "time": todayTimeStr, "user": userId})
+            .done(function () {
+                console.log('done');
+
                 const currentNotSavedActivityValue = getCookie('ac');
-                if (currentNotSavedActivityValue !== null && currentNotSavedActivityValue.trim() !== ''){
+                if (currentNotSavedActivityValue !== null && currentNotSavedActivityValue.trim() !== '') {
                     const items = currentNotSavedActivityValue.split('?');
-                    $.each(items, (i, v) =>{
-                       if (v.trim() !== ''){
-                           const entities = v.split('&');
+                    $.each(function (i, v) {
+                        if (v.trim() !== '') {
+                            const entities = v.split('&');
 
-                           const cActivity = entities[0];
-                           const cTodayDateStr = entities[1];
-                           const cTodayTimeStr = entities[2];
-                           const cUserId = entities[3];
+                            const cActivity = entities[0];
+                            const cTodayDateStr = entities[1];
+                            const cTodayTimeStr = entities[2];
+                            const cUserId = entities[3];
 
-                           $.post("index", {"activity": cActivity, "date": cTodayDateStr, "time": cTodayTimeStr, "user" : cUserId})
-                               .done( () => {
+                            $.post("index", {
+                                "activity": cActivity,
+                                "date": cTodayDateStr,
+                                "time": cTodayTimeStr,
+                                "user": cUserId
+                            })
+                                .done(function () {
                                     eraseCookie('ac');
                                     setCookie('ac', '');
-                               })
-                       }
+                                })
+                        }
                     });
                 }
 
                 $('#totalTimeInscription').css('color', 'darkgray');
             })
-            .fail((xhr) => {
+            .fail(function (xhr) {
+                console.log('fail');
+
                 const notSavedActivityCookieValue = activityId + '&' + todayDateStr + '&' + todayTimeStr + '&' + userId;
                 const currentNotSavedActivityValue = getCookie('ac');
                 const newNotSavedActivityValue = currentNotSavedActivityValue + '?' + notSavedActivityCookieValue;
@@ -122,7 +131,9 @@ function startTime(startDate, objTimer, activityId) {
 
                 showMessage('Ошибка ' + xhr.status, xhr.responseText);
             })
-            .always(() => {
+            .always(function () {
+                console.log('always');
+
                 fillMainTable();
             });
         return;
@@ -153,9 +164,17 @@ function addLeadZeroToDate(date, del) {
 }
 
 function fillMainTable() {
+    console.log('fillMainTable');
     const mainTable = $("#mainTable");
     const userId = getCookie('ui');
-    mainTable.load("index/fragment/" + userId, () => {
+
+    console.log('mainTable', mainTable);
+    console.log('userId', userId);
+
+    mainTable.load("index/fragment/" + userId + "?" + new Date().getTime(), function () {
+        console.log('load');
+
+        console.log('mainTable', mainTable);
         loadingTotalTime(false);
     });
 }
@@ -188,10 +207,10 @@ function loadAccordion(callBackFunc) {
 }
 
 function showUserAuthDialog(hasCloseBtn) {
-      const userAuthDialog = $('#userAuthDialog');
-        // userAuthDialog.load("index/user", () => {
-        //     $('#authDialog').modal();
-        // });
+    const userAuthDialog = $('#userAuthDialog');
+    // userAuthDialog.load("index/user", function() {
+    //     $('#authDialog').modal();
+    // });
 
     $.ajax({
         url: 'index/user',
@@ -199,19 +218,19 @@ function showUserAuthDialog(hasCloseBtn) {
             userAuthDialog.html(data);
 
             const btnClose = $('#btn-close');
-            if (hasCloseBtn){
+            if (hasCloseBtn) {
                 btnClose.removeClass('invisible');
-            } else{
+            } else {
                 btnClose.addClass('invisible');
             }
 
             $("#modalTitle").html('Выбор пользователя');
             $('#authDialog').modal();
         },
-        error:function (xhr) {
+        error: function (xhr) {
             showMessage('Ошибка ' + xhr.status, xhr.responseText);
         },
-        complete:function(){
+        complete: function () {
             // showLoadEffect(false);
         }
     });
@@ -226,45 +245,47 @@ function createUserCookie() {
     setCookie('ui', userId, 365);
     setCookie('un', userName, 365);
 
-    $('#userName').text("Пользователь : " +  userName);
+    $('#userName').text("Пользователь : " + userName);
 
     loadingTotalTime(true);
     fillMainTable();
 }
 
-function setCookie(name,value,days) {
+function setCookie(name, value, days) {
     eraseCookie(name);
 
     let expires = "";
     if (days) {
         const date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
+
 function getCookie(name) {
     const nameEQ = name + "=";
     const ca = document.cookie.split(';');
-    for(let i=0;i < ca.length;i++) {
+    for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
     }
     return null;
 }
+
 function eraseCookie(name) {
-    document.cookie = name+'=; Max-Age=-99999999;';
+    document.cookie = name + '=; Max-Age=-99999999;';
 }
 
 function checkUserCookie() {
     const userCookie = getCookie('ui');
 
-    if (userCookie === null || userCookie.trim() === ''){
+    if (userCookie === null || userCookie.trim() === '') {
         showUserAuthDialog(false);
-    } else{
+    } else {
         let userName = getCookie('un');
-        $('#userName').text("Пользователь " +  userName);
+        $('#userName').text("Пользователь " + userName);
     }
 }
 

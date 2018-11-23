@@ -26,7 +26,7 @@ function changeResult() {
         mainTable.load(entity + '/all/' + type + '/' + datetimepickerFrom + '/' + datetimepickerTo, function () {
             setMainTable();
         });
-    } else{
+    } else {
         setMainTable(false, false);
     }
 }

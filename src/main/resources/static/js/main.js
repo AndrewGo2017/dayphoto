@@ -1,6 +1,6 @@
 const entity = getValueFromUrl('/', true);
 
-$(() => {
+$(function () {
     fillMainTable();
 });
 
@@ -10,10 +10,10 @@ function fillMainTable() {
     const str = tableCondition !== undefined ? tableCondition : '';
     const mainTable = $("#mainTable");
     if (mainTable.length) {
-        mainTable.load(entity + '/all' + str, () => {
+        mainTable.load(entity + '/all' + str, function () {
             setMainTable();
         });
-    } else{
+    } else {
         setMainTable(false, false);
     }
 }
@@ -24,25 +24,25 @@ function setMainTable(isSearching, isPaging) {
 
     let id = 0;
     const elem = $('.main-table th');
-    elem.each(function(){
-        if( $(this).text()==='Id') {
+    elem.each(function () {
+        if ($(this).text() === 'Id') {
             id = elem.index(this);
         }
     });
 
     let searchValue = '';
-    if (entity === 'statistic'){
+    if (entity === 'statistic') {
         const userName = getCookie('un');
-        if (userName !== null && userName !== ''){
+        if (userName !== null && userName !== '') {
             searchValue = userName;
         }
     }
 
     const table = $('.main-table');
     table.DataTable({
-        searching : isSearching,
-        paging : isPaging,
-        info : isPaging,
+        searching: isSearching,
+        paging: isPaging,
+        info: isPaging,
         language: {
             "processing": "Подождите...",
             "search": "Поиск:",
@@ -64,8 +64,8 @@ function setMainTable(isSearching, isPaging) {
         "order": [[id, "asc"]],
         "scrollX": true,
         "columnDefs": [
-            { "width": "100px", "targets": 0 },
-            { "width": "70px", "targets": 1 }
+            {"width": "100px", "targets": 0},
+            {"width": "70px", "targets": 1}
         ]
     }).search(searchValue).draw();
     table.css('background-color', 'white');
@@ -75,18 +75,18 @@ function setMainTable(isSearching, isPaging) {
 function updateRow(id) {
     $.ajax({
         url: entity + '/' + id,
-        success: (data) => {
+        success: function (data) {
             $("#dialog").html(data);
 
-            if (id === 0){
+            if (id === 0) {
                 $("#modalTitle").html('Создание');
-            } else{
+            } else {
                 $("#modalTitle").html('Редактирование');
             }
 
             $('#editRow').modal();
         },
-        error: (xhr) => {
+        error: function (xhr) {
             showMessage('Ошибка ' + xhr.status, xhr.responseText);
         }
     });
@@ -99,7 +99,7 @@ function save() {
         type: "POST",
         url: "",
         data: dialog_data.serialize()
-    }).done(() => {
+    }).done(function () {
         $("#editRow").modal("hide");
         fillMainTable();
     });
@@ -125,17 +125,17 @@ function deleteRow(id) {
     $.ajax({
         url: entity + "/" + id,
         type: "DELETE"
-    }).done(() => {
+    }).done(function () {
         fillMainTable();
         $('#confirmDialog').modal('hide');
-    }).fail((xhr) => {
+    }).fail(function (xhr) {
         showMessage('Ошибка ' + xhr.status, xhr.responseText);
     });
 }
 
 function getValueFromUrl(str, isAlphabetic) {
     const afterSymStr = location.href.substr(location.href.lastIndexOf(str) + str.length);
-    if (isAlphabetic === true){
+    if (isAlphabetic === true) {
         const indexOfNonCharSym = afterSymStr.search(/[^A-Za-z]/);
         return afterSymStr.substring(0, indexOfNonCharSym === -1 ? afterSymStr.length : indexOfNonCharSym);
     } else {
@@ -151,11 +151,13 @@ function showMessage(header, text) {
 }
 
 function showLoading(isRunning) {
-    const loadingDialog=  $('#loadingDialog');
-    if (isRunning){
+    const loadingDialog = $('#loadingDialog');
+    if (isRunning) {
         loadingDialog.modal();
     } else {
-        setTimeout( () => loadingDialog.modal('hide'), 300);
+        setTimeout(function () {
+            loadingDialog.modal('hide')
+        }, 300);
     }
 }
 
