@@ -288,4 +288,3 @@ function checkUserCookie() {
         $('#userName').text("Пользователь " + userName);
     }
 }
-
