@@ -31,16 +31,17 @@
                     <div class="card" th:each="accordionNested : ${accordion.accordionNestedList}">
                         <div th:id="${accordionNested.headingNameID}">
                             <h5 class="mb-0">
-                                <button th:text="${accordionNested.cardHeaderBtnContent}" class="btn btn-dark btn-xl"
+                                <button th:text="${accordionNested.cardHeaderBtnContent}" class="btn btn-dark btn-xl accordion-nested-btn"
                                         type="button" data-toggle="collapse"
                                         aria-expanded="true"
-                                        th:attr="aria-controls=${accordionNested.bodyCardId},data-target='#' + ${accordionNested.bodyCardId}">
+                                        th:attr="aria-controls=${accordionNested.bodyCardId},data-target='#' + ${accordionNested.bodyCardId},group-id=${accordion.cardHeaderId},collapse-child=${accordionNested.bodyCardId}"
+                                >
                                 </button>
                             </h5>
                         </div>
 
                         <div th:id="${accordionNested.bodyCardId}" class="collapse collapse-child"
-                             th:attr="aria-labelledby=${accordionNested.headingNameID},data-parent='#' + ${accordion.nameId}"
+                             th:attr="aria-labelledby=${accordionNested.headingNameID},data-parent='#' + ${accordion.nameId},group-id=${accordion.cardHeaderId}"
                         >
                             <div class="card-body">
                                 <div class="timer" th:id="${accordionNested.timerId}"></div>

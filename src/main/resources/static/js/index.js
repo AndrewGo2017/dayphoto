@@ -1,7 +1,7 @@
 let timerOn = 0;
 
 $(function () {
-    $.ajaxSetup({ cache: false });
+    $.ajaxSetup({cache: false});
     checkUserCookie();
 
     loadingTotalTime(true);
@@ -9,12 +9,9 @@ $(function () {
 
     function onStart() {
         const collapseChild = $('.collapse-child');
-        collapseChild.on('hide.bs.collapse', function () {
-            timerOn--;
-            loading($('#onWorkLoading'), false);
-        });
 
-        collapseChild.on('shown.bs.collapse', function () {
+        collapseChild.on('shown.bs.collapse', function (e) {
+
             loading($('#onWorkLoading'), true);
             const startDate = new Date();
 
@@ -26,20 +23,45 @@ $(function () {
             const activityId = this.id.substring(this.id.lastIndexOf('-') + 1);
 
             startTime(startDate, obj.find('.timer'), activityId);
+
         });
 
-        const collapseParent = $('.collapse-parent');
+        collapseChild.on('hide.bs.collapse', function () {
+            timerOn--;
+            loading($('#onWorkLoading'), false);
+        });
 
-        collapseParent.on('hide.bs.collapse', function (e) {
-            if ($(this).is(e.target)) {
-                const nested = $(this).find('.collapse-child');
+        // interrupt activity
+        // const collapseParent = $('.collapse-parent');
+        // collapseParent.on('hide.bs.collapse', function (e) {
+        //     if ($(this).is(e.target)) {
+        //         const nested = $(this).find('.collapse-child');
+        //
+        //         $.each(nested, function (i, v) {
+        //             if ($(v).hasClass('show')) {
+        //                 $(v).collapse('hide');
+        //             }
+        //         });
+        //     }
+        // });
 
-                $.each(nested, function (i, v) {
+        $('.accordion-nested-btn').on('click', function (e) {
+            const collapseChild = $('.collapse-child');
+            $.each(collapseChild, function (i, v) {
+                 if (e.target.getAttribute('group-id') !== $(this)[0].getAttribute('group-id')) {
                     if ($(v).hasClass('show')) {
                         $(v).collapse('hide');
                     }
-                });
-            }
+                 }
+            });
+
+            const collapseElement = $('#'+e.target.getAttribute('collapse-child'));
+            setTimeout(function () {
+                if (!collapseElement.hasClass('show')) {
+                    $(collapseElement).collapse('show');
+                }
+
+            }, 500);
         });
     }
 
@@ -47,6 +69,14 @@ $(function () {
         e.preventDefault();
 
         showUserAuthDialog(true);
+    });
+
+    $('#stopAllActivitiesBtn').on('click', function (e) {
+        e.preventDefault();
+        const collapseElement = $('.collapse-child');
+        if (collapseElement.hasClass('show')) {
+            $(collapseElement).collapse('hide');
+        }
     });
 
     loadAccordion(onStart);
@@ -89,8 +119,6 @@ function startTime(startDate, objTimer, activityId) {
 
         $.post("index", {"activity": activityId, "date": todayDateStr, "time": todayTimeStr, "user": userId})
             .done(function () {
-                console.log('done');
-
                 const currentNotSavedActivityValue = getCookie('ac');
                 if (currentNotSavedActivityValue !== null && currentNotSavedActivityValue.trim() !== '') {
                     const items = currentNotSavedActivityValue.split('?');
@@ -120,8 +148,6 @@ function startTime(startDate, objTimer, activityId) {
                 $('#totalTimeInscription').css('color', 'darkgray');
             })
             .fail(function (xhr) {
-                console.log('fail');
-
                 const notSavedActivityCookieValue = activityId + '&' + todayDateStr + '&' + todayTimeStr + '&' + userId;
                 const currentNotSavedActivityValue = getCookie('ac');
                 const newNotSavedActivityValue = currentNotSavedActivityValue + '?' + notSavedActivityCookieValue;
@@ -132,8 +158,6 @@ function startTime(startDate, objTimer, activityId) {
                 showMessage('Ошибка ' + xhr.status, xhr.responseText);
             })
             .always(function () {
-                console.log('always');
-
                 fillMainTable();
             });
         return;
@@ -164,17 +188,11 @@ function addLeadZeroToDate(date, del) {
 }
 
 function fillMainTable() {
-    console.log('fillMainTable');
     const mainTable = $("#mainTable");
     const userId = getCookie('ui');
 
-    console.log('mainTable', mainTable);
-    console.log('userId', userId);
 
     mainTable.load("index/fragment/" + userId, function () {
-        console.log('load');
-
-        console.log('mainTable', mainTable);
         loadingTotalTime(false);
     });
 }
@@ -288,4 +306,3 @@ function checkUserCookie() {
         $('#userName').text("Пользователь " + userName);
     }
 }
-
