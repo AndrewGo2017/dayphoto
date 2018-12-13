@@ -1,6 +1,8 @@
 let timerOn = 0;
 
 $(function () {
+    showLoading(true);
+
     $.ajaxSetup({cache: false});
     checkUserCookie();
 
@@ -63,6 +65,8 @@ $(function () {
 
             }, 500);
         });
+
+        showLoading(false);
     }
 
     $('#userName').on('click', function (e) {

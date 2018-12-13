@@ -1,20 +1,21 @@
-package ru.sber.dayphoto.controller;
+package ru.sber.dayphoto.controller.feign;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.sber.dayphoto.feign.ActivityFeign;
+import ru.sber.dayphoto.feign.ActivityGroupFeign;
+import ru.sber.dayphoto.model.Activity;
 import ru.sber.dayphoto.model.ActivityGroup;
-import ru.sber.dayphoto.service.ActivityGroupService;
 
 import java.util.List;
 
 @Controller
 @RequestMapping("/activityGroup")
-public class ActivityGroupController {
-
+public class ActivityGroupFeignController {
     @Autowired
-    private ActivityGroupService activityGroupService;
+    private ActivityGroupFeign activityGroupFeign;
 
     @GetMapping
     public String index(Model m){
@@ -24,26 +25,30 @@ public class ActivityGroupController {
 
     @GetMapping("/{id}")
     public String get(@PathVariable("id") Integer id, Model m){
-        ActivityGroup activityGroup = activityGroupService.get(id);
+        ActivityGroup activityGroup = activityGroupFeign.get(id);
         m.addAttribute("activityGroup",activityGroup);
         return "fragments/dialogs :: activityGroupDialog";
     }
 
     @PostMapping
-    public String save(ActivityGroup entity) {
-        activityGroupService.save(entity);
+    public String save(ActivityGroup activityGroup) {
+        if (activityGroup.isNew()){
+            activityGroupFeign.create(activityGroup);
+        }else {
+            activityGroupFeign.update(activityGroup);
+        }
         return "dictionary";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") Integer id) {
-        activityGroupService.delete(id);
+        activityGroupFeign.delete(id);
         return "dictionary";
     }
 
     @GetMapping("/all")
     public String getAll(Model m){
-        List<ActivityGroup> activityGroups = activityGroupService.getAll();
+        List<ActivityGroup> activityGroups = activityGroupFeign.getAll();
         m.addAttribute("activityGroups", activityGroups);
         return "fragments/tables :: activityGroupList";
     }

@@ -10,8 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
+@Data
 @Table(name = "activity_groups")
-@NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class ActivityGroup extends BaseEntity {

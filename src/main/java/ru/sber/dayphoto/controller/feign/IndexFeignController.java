@@ -1,8 +1,5 @@
-package ru.sber.dayphoto.controller;
+package ru.sber.dayphoto.controller.feign;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,25 +8,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.sber.dayphoto.feign.StatisticFeign;
+import ru.sber.dayphoto.feign.UserFeign;
 import ru.sber.dayphoto.handler.accordion.Accordion;
 import ru.sber.dayphoto.handler.accordion.AccordionHandler;
 import ru.sber.dayphoto.model.Statistic;
 import ru.sber.dayphoto.model.User;
-import ru.sber.dayphoto.service.StatisticService;
-import ru.sber.dayphoto.service.UserService;
+import ru.sber.dayphoto.to.StatisticTo;
 
 import java.time.LocalTime;
 import java.util.List;
 
 @Controller
 @RequestMapping("/index")
-public class IndexController {
+public class IndexFeignController {
 
     @Autowired
-    private StatisticService statisticService;
+    private StatisticFeign statisticFeign;
 
     @Autowired
-    private UserService userService;
+    private UserFeign userFeign;
 
     @GetMapping
     public String index(Model m) {
@@ -37,16 +35,19 @@ public class IndexController {
     }
 
     @PostMapping
-    public ResponseEntity save(Statistic statistic) {
-        statisticService.save(statistic);
+    public ResponseEntity save(StatisticTo statisticTo) {
+        if (statisticTo.isNew()){
+            statisticFeign.create(statisticTo);
+        }else {
+            statisticFeign.update(statisticTo);
+        }
         return ResponseEntity.ok("");
     }
 
     @GetMapping("/fragment/{id}")
-    public String getFragment(Model m, @PathVariable("id") Integer id) throws InterruptedException {
+    public String getFragment(Model m, @PathVariable("id") Long id) throws InterruptedException {
         Thread.sleep(300);
-        LocalTime totalDayTime = statisticService.getTotalDayTime(id);
-
+        LocalTime totalDayTime = statisticFeign.getTotalDayTime(id);
 
         m.addAttribute("totalTime", totalDayTime);
         return "fragments/common :: fragment";
@@ -64,7 +65,7 @@ public class IndexController {
 
     @GetMapping("/user")
     public String getUsers(Model m) throws InterruptedException {
-        List<User> users = userService.getAll();
+        List<User> users = userFeign.getAll();
         m.addAttribute("users", users);
         return "fragments/common :: authDialog";
     }

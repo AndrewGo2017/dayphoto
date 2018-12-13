@@ -2,8 +2,9 @@ package ru.sber.dayphoto.handler.accordion;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.sber.dayphoto.service.ActivityGroupService;
-import ru.sber.dayphoto.service.ActivityService;
+import ru.sber.dayphoto.feign.ActivityFeign;
+import ru.sber.dayphoto.feign.ActivityGroupFeign;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +12,10 @@ import java.util.List;
 @Component
 public class AccordionHandler {
     @Autowired
-    private ActivityService activityService;
+    private ActivityFeign activityFeign;
     
     @Autowired
-    private ActivityGroupService activityGroupService; 
+    private ActivityGroupFeign activityGroupFeign;
     
     public String createAccordionName(String prefix, long id, long mainLevel, int nestedLevel){
         StringBuilder accordionNameBuilder = new StringBuilder();
@@ -33,10 +34,9 @@ public class AccordionHandler {
     
     public List<Accordion> getAccordionList (){
 
-        //accordionNested.bodyCardId
         List<Accordion> accordionList = new ArrayList<>();
 
-        activityGroupService.getAll().forEach(activityGroup -> {
+        activityGroupFeign.getAll().forEach(activityGroup -> {
             Accordion accordion = new Accordion();
             accordion.setNameId(createAccordionName("accordion" ,activityGroup.getId(), activityGroup.getId(), 0));
             accordion.setBodyCardId(createAccordionName("bodyCard" ,activityGroup.getId(), activityGroup.getId(), 0));
@@ -45,7 +45,7 @@ public class AccordionHandler {
 
             List<AccordionNested> accordionNestedList = new ArrayList<>();
 
-            activityService.getAllByActivityGroupId(activityGroup.getId()).forEach(activity -> {
+            activityFeign.getAllByActivityGroupId(activityGroup.getId()).forEach(activity -> {
                 AccordionNested accordionNested = new AccordionNested();
                 accordionNested.setNameId(createAccordionName("accordionNested" ,activity.getId(), activityGroup.getId(), 1));
                 accordionNested.setBodyCardId(createAccordionName("bodyCard" ,activity.getId(), activityGroup.getId(), 1));
@@ -62,51 +62,5 @@ public class AccordionHandler {
         });
 
         return accordionList;
-
-//        AccordionNested accordionNested11 = new AccordionNested(
-//                "nameId1-1",
-//                "heading1-1",
-//                "cardHeaderId1-1",
-//                "cardHeaderBtnContent1-1",
-//                "bodyCardId1-1",
-//                "timer1-1",
-//                "current1-1");
-//
-//        AccordionNested accordionNested12 = new AccordionNested(
-//                "nameId1-2",
-//                "heading1-2",
-//                "cardHeaderId1-2",
-//                "cardHeaderBtnContent1-2",
-//                "bodyCardId1-2",
-//                "timer1-2",
-//                "current1-2");
-//
-//        AccordionNested accordionNested21 = new AccordionNested(
-//                "nameId2-1",
-//                "heading2-1",
-//                "cardHeaderId2-1",
-//                "cardHeaderBtnContent2-1",
-//                "bodyCardId2-1",
-//                "timer2-1",
-//                "current2-1");
-//
-//        AccordionNested accordionNested22 = new AccordionNested(
-//                "nameId2-2",
-//                "heading2-2",
-//                "cardHeaderId2-2",
-//                "cardHeaderBtnContent2-2",
-//                "bodyCardId2-2",
-//                "timer2-2",
-//                "current2-2");
-//
-//
-//
-//        List<Accordion> list = new ArrayList<>();
-//        Accordion a1 = new Accordion("name-1",  "cardHeaderId-1", "cardHeaderBtnContent-1", "bodyCardId-1",  Arrays.asList(accordionNested11, accordionNested12));
-//        Accordion a2 = new Accordion("name-2",  "cardHeaderId-2", "cardHeaderBtnContent-2", "bodyCardId-2",  Arrays.asList(accordionNested21, accordionNested22));
-//        list.add(a1);
-//        list.add(a2);
-
-//        return list;
     }
 }

@@ -1,22 +1,26 @@
-package ru.sber.dayphoto.controller;
+package ru.sber.dayphoto.controller.feign;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.sber.dayphoto.service.StatisticService;
+import ru.sber.dayphoto.feign.StatisticFeign;
+import ru.sber.dayphoto.model.Statistic;
+import ru.sber.dayphoto.to.StatisticTo;
 import ru.sber.dayphoto.to.UserStatisticTimeTo;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
 @RequestMapping("/statistic")
-public class StatisticController {
+public class StatisticFeignController {
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     @Autowired
-    private StatisticService statisticService;
+    private StatisticFeign statisticFeign;
 
     @GetMapping
     public String index(Model m){
@@ -25,21 +29,21 @@ public class StatisticController {
         return "statistic";
     }
 
-//    @PostMapping
-//    public String save(Statistic entity) {
-//         statisticService.save(entity);
-//        return "dictionary";
-//    }
+    @PostMapping
+    public String save(StatisticTo statisticTo) {
+        statisticFeign.create(statisticTo);
+        return "dictionary";
+    }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") Integer id) {
-        statisticService.delete(id);
+        statisticFeign.delete(id);
         return "statistic";
     }
 
     @GetMapping("/all")
     public String getAll(Model m){
-        List<UserStatisticTimeTo> statistics = statisticService.getAllUserTotalDayTimeWithActivityDetails(LocalDate.now(), LocalDate.now());
+        List<UserStatisticTimeTo> statistics = statisticFeign.getAllUserTotalDayTimeWithActivityDetails(LocalDate.now().format(dateTimeFormatter), LocalDate.now().format(dateTimeFormatter));
         m.addAttribute("statistics", statistics);
         return "fragments/tables :: statisticList";
     }
@@ -47,22 +51,20 @@ public class StatisticController {
     @GetMapping("/all/{type}/{from}/{to}")
     public String getAllTotal(Model m,
                               @PathVariable("type") Integer type,
-                              @PathVariable("from") @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate from,
-                              @PathVariable("to") @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate to) throws InterruptedException {
+                              @PathVariable("from") String from,
+                              @PathVariable("to") String to) throws InterruptedException {
         Thread.sleep(300);
 
         List<UserStatisticTimeTo> statistics;
         if (type == 1){
-            statistics = statisticService.getAllUserTotalDayTimeWithActivityDetails(from, to);
+            statistics = statisticFeign.getAllUserTotalDayTimeWithActivityDetails(from, to);
             m.addAttribute("statistics", statistics);
             return "fragments/tables :: statisticList";
 
         } else {
-            statistics = statisticService.getAllUserTotalDayTime(from, to);
+            statistics = statisticFeign.getAllUserTotalDayTime(from, to);
             m.addAttribute("statistics", statistics);
             return "fragments/tables :: statistic1List";
         }
     }
 }
-
-//@DateTimeFormat(pattern = "dd-MM-yyyy")

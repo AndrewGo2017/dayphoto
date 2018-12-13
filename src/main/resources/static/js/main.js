@@ -69,6 +69,7 @@ function setMainTable(isSearching, isPaging) {
         ]
     }).search(searchValue).draw();
     table.css('background-color', 'white');
+
     showLoading(false);
 }
 
@@ -157,7 +158,7 @@ function showLoading(isRunning) {
     } else {
         setTimeout(function () {
             loadingDialog.modal('hide')
-        }, 300);
+        }, 500);
     }
 }
 
