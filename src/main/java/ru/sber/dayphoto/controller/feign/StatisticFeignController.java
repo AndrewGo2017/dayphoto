@@ -1,12 +1,10 @@
 package ru.sber.dayphoto.controller.feign;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.sber.dayphoto.feign.StatisticFeign;
-import ru.sber.dayphoto.model.Statistic;
 import ru.sber.dayphoto.to.StatisticTo;
 import ru.sber.dayphoto.to.UserStatisticTimeTo;
 

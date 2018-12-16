@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.sber.dayphoto.feign.UserFeign;
 import ru.sber.dayphoto.model.User;
-import ru.sber.dayphoto.service.UserService;
 
 import java.util.List;
 

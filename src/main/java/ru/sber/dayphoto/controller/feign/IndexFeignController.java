@@ -12,7 +12,6 @@ import ru.sber.dayphoto.feign.StatisticFeign;
 import ru.sber.dayphoto.feign.UserFeign;
 import ru.sber.dayphoto.handler.accordion.Accordion;
 import ru.sber.dayphoto.handler.accordion.AccordionHandler;
-import ru.sber.dayphoto.model.Statistic;
 import ru.sber.dayphoto.model.User;
 import ru.sber.dayphoto.to.StatisticTo;
 

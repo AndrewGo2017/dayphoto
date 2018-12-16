@@ -5,19 +5,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 
-@Entity
 @Data
-@Table(name = "activity_groups")
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class ActivityGroup extends BaseEntity {
     private String name;
 
-    @Column(name = "is_active")
     private Boolean isActive;
 
     public ActivityGroup(Long id, String name, Boolean isActive) {

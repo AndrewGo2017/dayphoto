@@ -4,10 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import ru.sber.dayphoto.model.ActivityGroup;
-import ru.sber.dayphoto.model.BaseEntity;
-
-import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor

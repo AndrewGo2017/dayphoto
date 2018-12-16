@@ -7,27 +7,16 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Entity
-@Table(name = "statistics")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Statistic extends BaseEntity {
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "activity_id")
     private Activity activity;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")

@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.sber.dayphoto.feign.ActivityFeign;
 import ru.sber.dayphoto.feign.ActivityGroupFeign;
-import ru.sber.dayphoto.model.Activity;
 import ru.sber.dayphoto.model.ActivityGroup;
 
 import java.util.List;

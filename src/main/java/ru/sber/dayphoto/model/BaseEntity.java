@@ -4,16 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-
-@MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Access(AccessType.FIELD)
 public class BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     public boolean isNew() {return id == null;}
