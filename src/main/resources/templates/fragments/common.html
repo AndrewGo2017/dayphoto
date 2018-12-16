@@ -59,7 +59,7 @@
 
 
 <!--User Auth-->
-<div th:fragment="authDialog" class="modal fade" id="authDialog">
+<div th:fragment="authDialog" class="modal fade" id="authDialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -73,7 +73,7 @@
 
                         <div class="col-xs-9">
                             <!--/*@thymesVar id="user" type="java.util.List<ru.sber.dayphoto.model.User>"*/-->
-                            <select class="btn btn-outline-dark dialog-data form-control" name="user" id="user">
+                            <select class="btn btn-secondary dropdown-toggle dialog-data form-control" name="user" id="user">
                                 <option th:each="user : ${users}"
                                         th:value="${user.id}"
                                         th:text="${user.name}">
@@ -85,7 +85,7 @@
 
                     <div class="form-group">
                         <div class="col-xs-offset-3 col-xs-9">
-                            <button type="button" onclick="createUserCookie()" class="btn btn-primary">
+                            <button type="button" onclick="createUserCookie()" class="btn btn-secondary">
                                 <span class="glyphicon glyphicon-ok" aria-hidden="true">Сохранить</span>
                             </button>
                         </div>

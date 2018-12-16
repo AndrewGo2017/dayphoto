@@ -49,7 +49,7 @@
 
 
 
-<div th:fragment="dialog-confirm" class="modal fade" id="confirmDialog">
+<div th:fragment="dialog-confirm" class="modal fade" id="confirmDialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -67,7 +67,7 @@
     </div>
 </div>
 
-<div th:fragment="messageDialog" class="modal fade" id="messageDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div th:fragment="messageDialog" class="modal fade" id="messageDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -86,7 +86,7 @@
     </div>
 </div>
 
-<div th:fragment="loadingDialog" class="modal fade" id="loadingDialog" role="dialog">
+<div th:fragment="loadingDialog" class="modal fade" id="loadingDialog" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div style="margin-top: 5px; margin-bottom: 5px; text-align: center" class="modal-body">

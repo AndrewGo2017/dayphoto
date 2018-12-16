@@ -1,6 +1,9 @@
 const entity = getValueFromUrl('/', true);
 
 $(function () {
+    $.ajaxSetup({
+        timeout: 120000
+    });
     fillMainTable();
 });
 
@@ -154,7 +157,10 @@ function showMessage(header, text) {
 function showLoading(isRunning) {
     const loadingDialog = $('#loadingDialog');
     if (isRunning) {
-        loadingDialog.modal();
+        loadingDialog.modal({
+            backdrop: 'static',
+            keyboard: false
+        });
     } else {
         setTimeout(function () {
             loadingDialog.modal('hide')
