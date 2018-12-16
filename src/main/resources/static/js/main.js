@@ -2,7 +2,8 @@ const entity = getValueFromUrl('/', true);
 
 $(function () {
     $.ajaxSetup({
-        timeout: 120000
+        timeout: 120000,
+        cache: false
     });
     fillMainTable();
 });
