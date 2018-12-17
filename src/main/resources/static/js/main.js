@@ -10,15 +10,15 @@ $(function () {
 
 const tableCondition = $('#tableCondition').val(); // some condition if all data is not needed
 function fillMainTable() {
-    showLoading(true);
-    const str = tableCondition !== undefined ? tableCondition : '';
     const mainTable = $("#mainTable");
     if (mainTable.length) {
+        showLoading(true);
+        const str = tableCondition !== undefined ? tableCondition : '';
         mainTable.load(entity + '/all' + str, function () {
             setMainTable();
         });
     } else {
-        showLoading(false);
+        // showLoading(false);
         // setMainTable(false, false);
     }
 }

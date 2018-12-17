@@ -52,7 +52,6 @@ $(function () {
 
             }, 500);
         });
-        showLoading(false);
     }
 
     $('#userName').on('click', function (e) {
@@ -420,14 +419,15 @@ let loadAccordionErrorCounter = 0;
 function loadAccordion(callBackFunc) {
     const accordion = $("#accordion");
 
+    localStorage.removeItem("accordion");
     let accordionFromLocalStorage = localStorage.getItem("accordion");
     if (accordionFromLocalStorage === null) {
         $.ajax({
-            async: false,
             url: 'index/accordion',
             success: function (data) {
                 accordionFromLocalStorage = data;
                 localStorage.setItem("accordion", data);
+                accordion.html(accordionFromLocalStorage);
             },
             error: function (xhr) {
                 loadAccordionErrorCounter++;
@@ -438,27 +438,24 @@ function loadAccordion(callBackFunc) {
                 showMessage('Ошибка ' + xhr.status, xhr.responseText);
             },
             complete: function () {
+                showLoading(false);
             },
         });
-    }
-
-    if (accordionFromLocalStorage !== null) {
-
+    } else{
         accordion.html(accordionFromLocalStorage);
     }
 
-
-    accordion.load("index/accordion", function (responseText, textStatus) {
-        if (textStatus === "error") {
-            loadAccordionErrorCounter++;
-            if (loadAccordionErrorCounter <= 3) {
-                loadAccordion(callBackFunc);
-            }
-        } else {
-            loadAccordionErrorCounter = 0;
-            callBackFunc();
-        }
-    });
+    // accordion.load("index/accordion", function (responseText, textStatus) {
+    //     if (textStatus === "error") {
+    //         loadAccordionErrorCounter++;
+    //         if (loadAccordionErrorCounter <= 3) {
+    //             loadAccordion(callBackFunc);
+    //         }
+    //     } else {
+    //         loadAccordionErrorCounter = 0;
+    //         callBackFunc();
+    //     }
+    // });
 }
 
 function showUserAuthDialog(hasCloseBtn) {
