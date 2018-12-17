@@ -1,10 +1,7 @@
 let timerOn = 0;
 
 $(function () {
-    // let myDateTime = new MyDateTime(1,2,3,4);
-    // console.log("myDateTime", myDateTime.activityId);
 
-    console.log("acc before", localStorage.getItem("acc"));
 
     showLoading(true);
     checkUserCookie();
@@ -13,11 +10,9 @@ $(function () {
     fillTotalTime();
 
     function onStart() {
-        console.log("onStart1");
         const collapseChild = $('.collapse-child');
 
         collapseChild.on('shown.bs.collapse', function (e) {
-            console.log("onStart shown");
 
             loading($('#onWorkLoading'), true);
             const startDate = new Date();
@@ -98,8 +93,6 @@ function onSaveResult() {
             const todayDate = new Date(v.todayDate);
             const todayTime = new Date(v.todayTime);
             const userId = v.userId;
-
-            console.log("index", i);
 
             saveResult(activityId, todayDate, todayTime, userId);
         });
@@ -431,7 +424,6 @@ let loadAccordionErrorCounter = 0;
 function loadAccordion(callBackFunc) {
     const accordion = $("#accordion");
 
-    localStorage.removeItem("accordion");
     let accordionFromLocalStorage = localStorage.getItem("accordion");
     if (accordionFromLocalStorage === null) {
         $.ajax({
