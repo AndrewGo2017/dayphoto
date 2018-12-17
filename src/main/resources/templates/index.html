@@ -27,7 +27,7 @@
             <td style="text-align: right">
                 <h1>
                     <span id="totalTimeInscription">Общее время :</span>
-                    <span id="mainTable"></span>
+                    <span id="totalTime"></span>
                     <span>
                      <img th:width="120" id="onSaveResultLoading" class="invisible" th:src="@{/gif/30.gif}">
                 </span>
@@ -39,6 +39,7 @@
                 <a style="color: grey" href="statistic">Справочники</a>
             </td>
             <td style="text-align: right">
+                <a style="color: grey" href="#" id="sentAllActivitiesBtn">Отправить</a>
                 <a style="color: grey" href="#" id="stopAllActivitiesBtn">Завершить</a>
             </td>
         </tr>
@@ -56,6 +57,7 @@
 
 <div th:replace="fragments/main :: messageDialog"></div>
 <div th:replace="fragments/main :: loadingDialog"></div>
+<div th:replace="fragments/main :: dialog-confirm"></div>
 
 </body>
 </html>
