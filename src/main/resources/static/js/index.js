@@ -1,8 +1,6 @@
 let timerOn = 0;
 
 $(function () {
-
-
     showLoading(true);
     checkUserCookie();
 
@@ -442,13 +440,14 @@ function loadAccordion(callBackFunc) {
                 showMessage('Ошибка ' + xhr.status, xhr.responseText);
             },
             complete: function () {
-                showLoading(false);
                 callBackFunc();
+                showLoading(false);
             },
         });
     } else {
         accordion.html(accordionFromLocalStorage);
         callBackFunc();
+        showLoading(false);
     }
 
 
