@@ -17,6 +17,9 @@ public interface StatisticFeign {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     void create(StatisticTo statisticTo);
 
+    @PostMapping(value = "/list" ,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    void createAll(List<StatisticTo> statisticTo);
+
     @PutMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     void update(StatisticTo statisticTo);
 

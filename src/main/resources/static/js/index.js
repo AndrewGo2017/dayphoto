@@ -85,26 +85,26 @@ function onSaveResult() {
     if (acc !== null) {
         showLoading(true);
 
+        const accParsedArray = [];
         const accParsed = JSON.parse(acc);
         $.each(accParsed, function (i, v) {
-            const activityId = v.activityId;
-            const todayDate = new Date(v.todayDate);
-            const todayTime = new Date(v.todayTime);
-            const userId = v.userId;
+            const activityId = v.activity;
+            const todayDate = addLeadZeroToDate(new Date(v.date), '-');;
+            const todayTime = addLeadZeroToTime(new Date(v.time), true);;
+            const userId = v.user;
 
-            saveResult(activityId, todayDate, todayTime, userId);
+            accParsedArray.push(new MyTotalTime(activityId, todayDate, todayTime, userId));
         });
+        saveResultList(JSON.stringify(accParsedArray));
 
-        localStorage.removeItem("acc");
-        const ac = localStorage.getItem("ac");
-        if (ac !== null) {
-            const acParsed = JSON.parse(ac);
-            $.each(acParsed, function (i, v) {
-                saveDataToLocalStorageArray(v);
-            });
-        }
-
-        showLoading(false);
+        //
+        // const ac = localStorage.getItem("ac");
+        // if (ac !== null) {
+        //     const acParsed = JSON.parse(ac);
+        //     $.each(acParsed, function (i, v) {
+        //         saveDataToLocalStorageArray(v);
+        //     });
+        // }
     }
 }
 
@@ -132,7 +132,7 @@ function startTime(startDate, objTimer, activityId) {
 
         loadingTotalTime(true);
 
-        saveDataToLocalStorageArray(new MyDateTime(activityId, today.getTime(), now.getTime(), userId), "acc");
+        saveDataToLocalStorageArray(new MyTotalTime(activityId, today.getTime(), now.getTime(), userId), "acc");
         fillTotalTime();
 
         return;
@@ -170,7 +170,7 @@ function saveResult(activityId, todayDate, todayTime, userId) {
     //         } else {
     //             errorSaveResultCounter = 0;
     //
-    //             saveDataToLocalStorageArray(new MyDateTime(activityId, todayDate.getTime(), todayTime.getTime(), userId), "ac");
+    //             saveDataToLocalStorageArray(new MyTotalTime(activityId, todayDate.getTime(), todayTime.getTime(), userId), "ac");
     //
     //             $('#totalTimeInscription').css('color', 'firebrick');
     //
@@ -196,7 +196,7 @@ function saveResult(activityId, todayDate, todayTime, userId) {
             } else {
                 errorSaveResultCounter = 0;
 
-                saveDataToLocalStorageArray(new MyDateTime(activityId, todayDate.getTime(), todayTime.getTime(), userId), "ac");
+                saveDataToLocalStorageArray(new MyTotalTime(activityId, todayDate.getTime(), todayTime.getTime(), userId), "ac");
 
                 $('#totalTimeInscription').css('color', 'firebrick');
 
@@ -208,6 +208,36 @@ function saveResult(activityId, todayDate, todayTime, userId) {
         },
     });
 
+}
+
+let errorSaveResultListCounter = 0;
+function saveResultList(resultList) {
+    $.ajax({
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        url: 'index/list',
+        data: resultList,
+        success: function () {
+            $('#totalTimeInscription').css('color', 'darkgray');
+        },
+        error: function (xhr) {
+            if (errorSaveResultListCounter <= 3) {
+                errorSaveResultListCounter++;
+                saveResultList(resultList)
+            } else {
+                errorSaveResultListCounter = 0;
+
+                $('#totalTimeInscription').css('color', 'firebrick');
+
+                showMessage('Ошибка ' + xhr.status, xhr.responseText);
+            }
+        },
+        complete: function () {
+            fillTotalTime();
+            localStorage.removeItem("acc");
+            showLoading(false);
+        },
+    });
 }
 
 
@@ -232,7 +262,7 @@ function saveDataToCookieArray(data, cookieName) {
     setCookie(cookieName, JSON.stringify(dateParsed));
 }
 //
-// class MyDateTime {
+// class MyTotalTime {
 //     constructor(activityId, todayDate, todayTime, userId) {
 //         this.activityId = activityId;
 //         this.todayDate = todayDate;
@@ -241,11 +271,11 @@ function saveDataToCookieArray(data, cookieName) {
 //     }
 // }
 
-function MyDateTime(activityId, todayDate, todayTime, userId) {
-    this.activityId = activityId;
-    this.todayDate = todayDate;
-    this.todayTime = todayTime;
-    this.userId = userId;
+function MyTotalTime(activityId, todayDate, todayTime, userId) {
+    this.activity = activityId;
+    this.date = todayDate;
+    this.time = todayTime;
+    this.user = userId;
 }
 
 function getActivityTotalTimeFromLocalStorage(userId) {
@@ -256,10 +286,10 @@ function getActivityTotalTimeFromLocalStorage(userId) {
         let myDateTimeFromCookie = JSON.parse(myDateTimeFromCookieValue);
         if (myDateTimeFromCookie !== null) {
             $.each(myDateTimeFromCookie, function (i, v) {
-                const cActivity = v.activityId;
-                const cTodayDate = new Date(v.todayDate);
-                const cTodayTime = new Date(v.todayTime).getTime();
-                const cUserId = v.userId;
+                const cActivity = v.activity;
+                const cTodayDate = new Date(v.date);
+                const cTodayTime = new Date(v.time).getTime();
+                const cUserId = v.user;
 
                 if (cUserId === userId) {
                     const dayNum = cTodayDate.getDay() + cTodayDate.getMonth() + cTodayDate.getFullYear();
@@ -470,25 +500,32 @@ function showUserAuthDialog(hasCloseBtn) {
     //     $('#authDialog').modal();
     // });
     // localStorage.removeItem("users");
-    let users = localStorage.getItem("users");
+    let users = null// localStorage.getItem("users");
 
     if (users === null) {
+        console.log("null")
         showLoading(true);
 
         $.ajax({
-            async: false,
             url: 'index/user',
             success: function (data) {
 
                 users = data;
                 localStorage.setItem("users", data);
 
+                userAuthDialog.html(users);
+                $("#modalTitle").html('Выбор пользователя');
+
                 const btnClose = $('#btn-close');
                 if (hasCloseBtn) {
                     btnClose.removeClass('invisible');
                 } else {
+                    console.log("invisible");
                     btnClose.addClass('invisible');
                 }
+
+                $('#authDialog').modal();
+
             },
             error: function (xhr) {
                 showMessage('Ошибка ' + xhr.status, xhr.responseText);
@@ -498,14 +535,12 @@ function showUserAuthDialog(hasCloseBtn) {
             },
 
         });
-    }
-
-    if (users) {
+    } else{
         userAuthDialog.html(users);
-
         $("#modalTitle").html('Выбор пользователя');
         $('#authDialog').modal();
     }
+
 }
 
 function createUserCookie() {
@@ -551,7 +586,7 @@ function eraseCookie(name) {
 }
 
 function checkUserCookie() {
-    const userCookie = getCookie('ui');
+    const userCookie = null// getCookie('ui');
 
     if (userCookie === null || userCookie.trim() === '') {
         showUserAuthDialog(false);
