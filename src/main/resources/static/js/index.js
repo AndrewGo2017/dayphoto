@@ -1,6 +1,9 @@
 let timerOn = 0;
 
 $(function () {
+    // let myDateTime = new MyDateTime(1,2,3,4);
+    // console.log("myDateTime", myDateTime.activityId);
+
     console.log("acc before", localStorage.getItem("acc"));
 
     showLoading(true);
@@ -10,9 +13,11 @@ $(function () {
     fillTotalTime();
 
     function onStart() {
+        console.log("onStart1");
         const collapseChild = $('.collapse-child');
 
         collapseChild.on('shown.bs.collapse', function (e) {
+            console.log("onStart shown");
 
             loading($('#onWorkLoading'), true);
             const startDate = new Date();
@@ -235,14 +240,21 @@ function saveDataToCookieArray(data, cookieName) {
     dateParsed.push(data);
     setCookie(cookieName, JSON.stringify(dateParsed));
 }
+//
+// class MyDateTime {
+//     constructor(activityId, todayDate, todayTime, userId) {
+//         this.activityId = activityId;
+//         this.todayDate = todayDate;
+//         this.todayTime = todayTime;
+//         this.userId = userId;
+//     }
+// }
 
-class MyDateTime {
-    constructor(activityId, todayDate, todayTime, userId) {
-        this.activityId = activityId;
-        this.todayDate = todayDate;
-        this.todayTime = todayTime;
-        this.userId = userId;
-    }
+function MyDateTime(activityId, todayDate, todayTime, userId) {
+    this.activityId = activityId;
+    this.todayDate = todayDate;
+    this.todayTime = todayTime;
+    this.userId = userId;
 }
 
 function getActivityTotalTimeFromLocalStorage(userId) {
@@ -439,11 +451,14 @@ function loadAccordion(callBackFunc) {
             },
             complete: function () {
                 showLoading(false);
+                callBackFunc();
             },
         });
-    } else{
+    } else {
         accordion.html(accordionFromLocalStorage);
+        callBackFunc();
     }
+
 
     // accordion.load("index/accordion", function (responseText, textStatus) {
     //     if (textStatus === "error") {
