@@ -500,7 +500,7 @@ function showUserAuthDialog(hasCloseBtn) {
     //     $('#authDialog').modal();
     // });
     // localStorage.removeItem("users");
-    let users = null// localStorage.getItem("users");
+    let users = localStorage.getItem("users");
 
     if (users === null) {
         console.log("null")
@@ -586,7 +586,7 @@ function eraseCookie(name) {
 }
 
 function checkUserCookie() {
-    const userCookie = null// getCookie('ui');
+    const userCookie  = getCookie('ui');
 
     if (userCookie === null || userCookie.trim() === '') {
         showUserAuthDialog(false);
