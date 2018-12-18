@@ -73,8 +73,22 @@ $(function () {
         showConfirm("Подтверждение", "Вы уверены, что хотите отправить результат?", onSaveResult);
     });
 
+
+    $('#refreshAllBtn').on('click', function (e) {
+        e.preventDefault();
+
+        const onSaveResult = "onRefresh()";
+        showConfirm("Подтверждение", "Вы уверены, что хотите обновить данные приложения?", onSaveResult);
+    });
+
     loadAccordion(onStart);
 });
+
+function onRefresh() {
+    localStorage.clear();
+    $('#confirmDialog').modal('hide');
+    showUserAuthDialog(false);
+}
 
 function onSaveResult() {
     $('#confirmDialog').modal('hide');
