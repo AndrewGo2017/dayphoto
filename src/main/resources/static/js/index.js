@@ -128,7 +128,7 @@ function startTime(startDate, objTimer, activityId) {
     } else {
 
         checkUserCookie();
-        let userId = getCookie('ui');
+        let userId = localStorage.getItem('ui'); // getCookie('ui');
 
         loadingTotalTime(true);
 
@@ -257,9 +257,13 @@ function saveDataToLocalStorageArray(data, itemName) {
 }
 
 function saveDataToCookieArray(data, cookieName) {
-    let dateParsed = JSON.parse(getCookie(cookieName));
+    // let dateParsed = JSON.parse(getCookie(cookieName));
+    // dateParsed.push(data);
+    // setCookie(cookieName, JSON.stringify(dateParsed));
+
+    let dateParsed = JSON.parse(localStorage.getItem(cookieName));
     dateParsed.push(data);
-    setCookie(cookieName, JSON.stringify(dateParsed));
+    localStorage.setItem(cookieName, JSON.stringify(dateParsed));
 }
 //
 // class MyTotalTime {
@@ -314,79 +318,79 @@ function getActivityTotalTimeFromLocalStorage(userId) {
 }
 
 
-function getActivityTotalTimeFromCookie2(userId) {
-    const currentNotSavedActivityValue = getCookie('acc');
-    if (currentNotSavedActivityValue !== null && currentNotSavedActivityValue.trim() !== '') {
-        const currentNotSavedActivityArray = currentNotSavedActivityValue.split('?');
-        $.each(currentNotSavedActivityValue, function (i, v) {
-            if (v.trim() !== '') {
-                const entities = v.split('&');
-
-                const cActivity = entities[0];
-                const cTodayDateStr = entities[1];
-                const cTodayTimeStr = entities[2];
-                const cUserId = entities[3];
-
-                if (cUserId === userId) {
-
-                }
-            }
-        })
-    }
-}
-
-function tryAgainForError() {
-    const currentNotSavedActivityValue = getCookie('ac');
-    if (currentNotSavedActivityValue !== null && currentNotSavedActivityValue.trim() !== '') {
-        const currentNotSavedActivityArray = currentNotSavedActivityValue.split('?');
-        let notSavedActivityValue = "";
-        $.each(currentNotSavedActivityArray, function (i, v) {
-            if (v.trim() !== '') {
-                const entities = v.split('&');
-
-                const cActivity = entities[0];
-                const cTodayDateStr = entities[1];
-                const cTodayTimeStr = entities[2];
-                const cUserId = entities[3];
-
-                $.post("index", {
-                    "activity": cActivity,
-                    "date": cTodayDateStr,
-                    "time": cTodayTimeStr,
-                    "user": cUserId
-                }).fail(function () {
-                    notSavedActivityValue = addActivityValue(notSavedActivityValue, v);
-                }).done(function () {
-
-                })
-            }
-        });
-        eraseCookie('ac');
-        setCookie('ac', '');
-
-        if (notSavedActivityValue !== "") {
-            setCookie('ac', notSavedActivityValue);
-        }
-    }
-}
-
-function saveResultFromCookie() {
-    const myDateTimeFromCookieValue = getCookie("acc");
-    if (myDateTimeFromCookieValue !== null && myDateTimeFromCookieValue.trim() !== "") {
-        let myDateTimeFromCookie = JSON.parse(myDateTimeFromCookieValue);
-        if (myDateTimeFromCookie !== null) {
-            $.each(myDateTimeFromCookie, function (i, v) {
-                const cActivity = v.activityId;
-                const cTodayDate = new Date(v.todayDate);
-                const cTodayTime = new Date(v.todayTime);
-                const cUserId = v.userId;
-
-
-                saveResult(cActivity, todayDateStr, todayTimeStr, cUserId);
-            })
-        }
-    }
-}
+// function getActivityTotalTimeFromCookie2(userId) {
+//     const currentNotSavedActivityValue = getCookie('acc');
+//     if (currentNotSavedActivityValue !== null && currentNotSavedActivityValue.trim() !== '') {
+//         const currentNotSavedActivityArray = currentNotSavedActivityValue.split('?');
+//         $.each(currentNotSavedActivityValue, function (i, v) {
+//             if (v.trim() !== '') {
+//                 const entities = v.split('&');
+//
+//                 const cActivity = entities[0];
+//                 const cTodayDateStr = entities[1];
+//                 const cTodayTimeStr = entities[2];
+//                 const cUserId = entities[3];
+//
+//                 if (cUserId === userId) {
+//
+//                 }
+//             }
+//         })
+//     }
+// }
+//
+// function tryAgainForError() {
+//     const currentNotSavedActivityValue = getCookie('ac');
+//     if (currentNotSavedActivityValue !== null && currentNotSavedActivityValue.trim() !== '') {
+//         const currentNotSavedActivityArray = currentNotSavedActivityValue.split('?');
+//         let notSavedActivityValue = "";
+//         $.each(currentNotSavedActivityArray, function (i, v) {
+//             if (v.trim() !== '') {
+//                 const entities = v.split('&');
+//
+//                 const cActivity = entities[0];
+//                 const cTodayDateStr = entities[1];
+//                 const cTodayTimeStr = entities[2];
+//                 const cUserId = entities[3];
+//
+//                 $.post("index", {
+//                     "activity": cActivity,
+//                     "date": cTodayDateStr,
+//                     "time": cTodayTimeStr,
+//                     "user": cUserId
+//                 }).fail(function () {
+//                     notSavedActivityValue = addActivityValue(notSavedActivityValue, v);
+//                 }).done(function () {
+//
+//                 })
+//             }
+//         });
+//         eraseCookie('ac');
+//         setCookie('ac', '');
+//
+//         if (notSavedActivityValue !== "") {
+//             setCookie('ac', notSavedActivityValue);
+//         }
+//     }
+// }
+//
+// function saveResultFromCookie() {
+//     const myDateTimeFromCookieValue = getCookie("acc");
+//     if (myDateTimeFromCookieValue !== null && myDateTimeFromCookieValue.trim() !== "") {
+//         let myDateTimeFromCookie = JSON.parse(myDateTimeFromCookieValue);
+//         if (myDateTimeFromCookie !== null) {
+//             $.each(myDateTimeFromCookie, function (i, v) {
+//                 const cActivity = v.activityId;
+//                 const cTodayDate = new Date(v.todayDate);
+//                 const cTodayTime = new Date(v.todayTime);
+//                 const cUserId = v.userId;
+//
+//
+//                 saveResult(cActivity, todayDateStr, todayTimeStr, cUserId);
+//             })
+//         }
+//     }
+// }
 
 function addLeadZeroToTime(date, utc) {
 
@@ -412,7 +416,7 @@ function addLeadZeroToDate(date, del) {
 }
 
 function fillTotalTime() {
-    const userId = getCookie('ui');
+    const userId = localStorage.getItem('ui'); //getCookie('ui');
 
     setTimeout(function () {
         getActivityTotalTimeFromLocalStorage(userId);
@@ -549,8 +553,11 @@ function createUserCookie() {
     const userId = user.val();
     const userName = user.text().trim();
 
-    setCookie('ui', userId, 365);
-    setCookie('un', userName, 365);
+    // setCookie('ui', userId, 365);
+    // setCookie('un', userName, 365);
+
+    localStorage.setItem('ui', userId);
+    localStorage.setItem('un', userName);
 
     $('#userName').text("Пользователь : " + userName);
 
@@ -586,12 +593,12 @@ function eraseCookie(name) {
 }
 
 function checkUserCookie() {
-    const userCookie  = getCookie('ui');
+    const userCookie  = localStorage.getItem('ui');//  getCookie('ui');
 
     if (userCookie === null || userCookie.trim() === '') {
         showUserAuthDialog(false);
     } else {
-        let userName = getCookie('un');
+        let userName = localStorage.getItem('un'); //getCookie('un');
         $('#userName').text("Пользователь " + userName);
     }
 }
