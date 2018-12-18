@@ -115,7 +115,7 @@ function startTime(startDate, objTimer, activityId) {
         const todayTimeStr = addLeadZeroToTime(now, true);
 
         checkUserCookie();
-        let userId = getCookie('ui');
+        let userId = localStorage.getItem('ui'); 
 
         loadingTotalTime(true);
 
@@ -138,9 +138,9 @@ function saveResult(activityId, todayDateStr, todayTimeStr, userId) {
             }
             errorCounter = 0;
             const notSavedActivityCookieValue = convertActivity(activityId, todayDateStr, todayTimeStr, userId);
-            const currentNotSavedActivityValue = getCookie('ac');
+            const currentNotSavedActivityValue = localStorage.getItem('ac');
             const newNotSavedActivityValue = addActivityValue(currentNotSavedActivityValue, notSavedActivityCookieValue);
-            setCookie('ac', newNotSavedActivityValue);
+            localStorage.getItem('ac', newNotSavedActivityValue);
 
             $('#totalTimeInscription').css('color', 'firebrick');
 
@@ -160,7 +160,7 @@ function addActivityValue(currentNotSavedActivityValue, notSavedActivityCookieVa
 }
 
 function tryAgainForError() {
-    const currentNotSavedActivityValue = getCookie('ac');
+    const currentNotSavedActivityValue = localStorage.getItem('ac');
     if (currentNotSavedActivityValue !== null && currentNotSavedActivityValue.trim() !== '') {
         const currentNotSavedActivityArray = currentNotSavedActivityValue.split('?');
         let notSavedActivityValue = "";
@@ -185,11 +185,11 @@ function tryAgainForError() {
                 })
             }
         });
-        eraseCookie('ac');
-        setCookie('ac', '');
+        localStorage.removeItem('ac');
+        localStorage.getItem('ac', '');
 
         if (notSavedActivityValue !== ""){
-            setCookie('ac', notSavedActivityValue);
+            localStorage.getItem('ac', notSavedActivityValue);
         }
     }
 }
@@ -219,7 +219,7 @@ function addLeadZeroToDate(date, del) {
 
 function fillMainTable() {
     const mainTable = $("#mainTable");
-    const userId = getCookie('ui');
+    const userId = localStorage.getItem('ui');
 
 
     mainTable.load("index/fragment/" + userId, function () {
@@ -290,8 +290,8 @@ function createUserCookie() {
     const userId = user.val();
     const userName = user.text().trim();
 
-    setCookie('ui', userId, 365);
-    setCookie('un', userName, 365);
+    localStorage.getItem('ui', userId, 365);
+    localStorage.getItem('un', userName, 365);
 
     $('#userName').text("Пользователь : " + userName);
 
@@ -299,7 +299,7 @@ function createUserCookie() {
     fillMainTable();
 }
 
-function setCookie(name, value, days) {
+function localStorage.getItem(name, value, days) {
     eraseCookie(name);
 
     let expires = "";
@@ -311,7 +311,7 @@ function setCookie(name, value, days) {
     document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 
-function getCookie(name) {
+function localStorage.getItem(name) {
     const nameEQ = name + "=";
     const ca = document.cookie.split(';');
     for (let i = 0; i < ca.length; i++) {
@@ -327,12 +327,12 @@ function eraseCookie(name) {
 }
 
 function checkUserCookie() {
-    const userCookie = getCookie('ui');
+    const userCookie = localStorage.getItem('ui');
 
     if (userCookie === null || userCookie.trim() === '') {
         showUserAuthDialog(false);
     } else {
-        let userName = getCookie('un');
+        let userName = localStorage.getItem('un');
         $('#userName').text("Пользователь " + userName);
     }
 }

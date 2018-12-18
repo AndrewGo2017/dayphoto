@@ -36,7 +36,7 @@ function setMainTable(isSearching, isPaging) {
 
     let searchValue = '';
     if (entity === 'statistic') {
-        const userName = getCookie('un');
+        const userName = localStorage.getItem('un');
         if (userName !== null && userName !== '') {
             searchValue = userName;
         }
