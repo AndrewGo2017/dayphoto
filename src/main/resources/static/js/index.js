@@ -185,7 +185,7 @@ function tryAgainForError() {
                 })
             }
         });
-        localStorage.removeItem('ac');
+        localStorage('ac');
         localStorage.getItem('ac', '');
 
         if (notSavedActivityValue !== ""){
@@ -299,7 +299,7 @@ function createUserCookie() {
     fillMainTable();
 }
 
-function localStorage.getItem(name, value, days) {
+function getCookie(name, value, days) {
     eraseCookie(name);
 
     let expires = "";
@@ -311,7 +311,7 @@ function localStorage.getItem(name, value, days) {
     document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 
-function localStorage.getItem(name) {
+function getCookie(name) {
     const nameEQ = name + "=";
     const ca = document.cookie.split(';');
     for (let i = 0; i < ca.length; i++) {
