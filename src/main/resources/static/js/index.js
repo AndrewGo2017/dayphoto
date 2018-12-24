@@ -2,7 +2,7 @@ let timerOn = 0;
 
 $(function () {
     showLoading(true);
-    checkUserCookie();
+    checkLocalStorage();
 
     loadingTotalTime(true);
     fillTotalTime();
@@ -10,7 +10,7 @@ $(function () {
     function onStart() {
         const collapseChild = $('.collapse-child');
 
-        collapseChild.on('shown.bs.collapse', function (e) {
+        collapseChild.on('shown.bs.collapse', function () {
 
             loading($('#onWorkLoading'), true);
             const startDate = new Date();
@@ -103,22 +103,13 @@ function onSaveResult() {
         const accParsed = JSON.parse(acc);
         $.each(accParsed, function (i, v) {
             const activityId = v.activity;
-            const todayDate = addLeadZeroToDate(new Date(v.date), '-');;
-            const todayTime = addLeadZeroToTime(new Date(v.time), true);;
+            const todayDate = addLeadZeroToDate(new Date(v.date), '-');
+            const todayTime = addLeadZeroToTime(new Date(v.time), true);
             const userId = v.user;
 
             accParsedArray.push(new MyTotalTime(activityId, todayDate, todayTime, userId));
         });
         saveResultList(JSON.stringify(accParsedArray));
-
-        //
-        // const ac = localStorage.getItem("ac");
-        // if (ac !== null) {
-        //     const acParsed = JSON.parse(ac);
-        //     $.each(acParsed, function (i, v) {
-        //         saveDataToLocalStorageArray(v);
-        //     });
-        // }
     }
 }
 
@@ -141,8 +132,8 @@ function startTime(startDate, objTimer, activityId) {
         }, 300);
     } else {
 
-        checkUserCookie();
-        let userId = localStorage.getItem('ui'); // getCookie('ui');
+        checkLocalStorage();
+        let userId = localStorage.getItem('ui');
 
         loadingTotalTime(true);
 
@@ -167,33 +158,9 @@ function getFormattedTotalTime(now) {
 }
 
 let errorSaveResultCounter = 0;
-
 function saveResult(activityId, todayDate, todayTime, userId) {
     const todayDateStr = addLeadZeroToDate(todayDate, '-');
     const todayTimeStr = addLeadZeroToTime(todayTime, true);
-
-
-    // $.post("index", {"activity": activityId, "date": todayDateStr, "time": todayTimeStr, "user": userId})
-    //     .done(function () {
-    //         $('#totalTimeInscription').css('color', 'darkgray');
-    //     })
-    //     .fail(function (xhr) {
-    //         if (errorSaveResultCounter <= 3) {
-    //             errorSaveResultCounter++;
-    //             saveResult(activityId, todayDate, todayTime, userId)
-    //         } else {
-    //             errorSaveResultCounter = 0;
-    //
-    //             saveDataToLocalStorageArray(new MyTotalTime(activityId, todayDate.getTime(), todayTime.getTime(), userId), "ac");
-    //
-    //             $('#totalTimeInscription').css('color', 'firebrick');
-    //
-    //             showMessage('Ошибка ' + xhr.status, xhr.responseText);
-    //         }
-    //     })
-    //     .always(function () {
-    //         fillTotalTime();
-    //     });
 
     $.ajax({
         type: "POST",
@@ -270,23 +237,10 @@ function saveDataToLocalStorageArray(data, itemName) {
 
 }
 
-function saveDataToCookieArray(data, cookieName) {
-    // let dateParsed = JSON.parse(getCookie(cookieName));
-    // dateParsed.push(data);
-    // setCookie(cookieName, JSON.stringify(dateParsed));
-
-    let dateParsed = JSON.parse(localStorage.getItem(cookieName));
-    dateParsed.push(data);
-    localStorage.setItem(cookieName, JSON.stringify(dateParsed));
-}
-//
-// class MyTotalTime {
-//     constructor(activityId, todayDate, todayTime, userId) {
-//         this.activityId = activityId;
-//         this.todayDate = todayDate;
-//         this.todayTime = todayTime;
-//         this.userId = userId;
-//     }
+// function saveDataToCookieArray(data, cookieName) {
+//     let dateParsed = JSON.parse(localStorage.getItem(cookieName));
+//     dateParsed.push(data);
+//     localStorage.setItem(cookieName, JSON.stringify(dateParsed));
 // }
 
 function MyTotalTime(activityId, todayDate, todayTime, userId) {
@@ -299,11 +253,11 @@ function MyTotalTime(activityId, todayDate, todayTime, userId) {
 function getActivityTotalTimeFromLocalStorage(userId) {
     let totalTime;
     const todayNum = new Date().getDay() + new Date().getMonth() + new Date().getFullYear();
-    const myDateTimeFromCookieValue = localStorage.getItem("acc"); //getCookie("acc");
-    if (myDateTimeFromCookieValue !== null && myDateTimeFromCookieValue.trim() !== "") {
-        let myDateTimeFromCookie = JSON.parse(myDateTimeFromCookieValue);
-        if (myDateTimeFromCookie !== null) {
-            $.each(myDateTimeFromCookie, function (i, v) {
+    const myDateTimeLocalStorageValue = localStorage.getItem("acc");
+    if (myDateTimeLocalStorageValue !== null && myDateTimeLocalStorageValue.trim() !== "") {
+        let myDateTimeFromLocalStorage = JSON.parse(myDateTimeLocalStorageValue);
+        if (myDateTimeFromLocalStorage !== null) {
+            $.each(myDateTimeFromLocalStorage, function (i, v) {
                 const cActivity = v.activity;
                 const cTodayDate = new Date(v.date);
                 const cTodayTime = new Date(v.time).getTime();
@@ -330,81 +284,6 @@ function getActivityTotalTimeFromLocalStorage(userId) {
         totalTimeSpan.text("00:00:00");
     }
 }
-
-
-// function getActivityTotalTimeFromCookie2(userId) {
-//     const currentNotSavedActivityValue = getCookie('acc');
-//     if (currentNotSavedActivityValue !== null && currentNotSavedActivityValue.trim() !== '') {
-//         const currentNotSavedActivityArray = currentNotSavedActivityValue.split('?');
-//         $.each(currentNotSavedActivityValue, function (i, v) {
-//             if (v.trim() !== '') {
-//                 const entities = v.split('&');
-//
-//                 const cActivity = entities[0];
-//                 const cTodayDateStr = entities[1];
-//                 const cTodayTimeStr = entities[2];
-//                 const cUserId = entities[3];
-//
-//                 if (cUserId === userId) {
-//
-//                 }
-//             }
-//         })
-//     }
-// }
-//
-// function tryAgainForError() {
-//     const currentNotSavedActivityValue = getCookie('ac');
-//     if (currentNotSavedActivityValue !== null && currentNotSavedActivityValue.trim() !== '') {
-//         const currentNotSavedActivityArray = currentNotSavedActivityValue.split('?');
-//         let notSavedActivityValue = "";
-//         $.each(currentNotSavedActivityArray, function (i, v) {
-//             if (v.trim() !== '') {
-//                 const entities = v.split('&');
-//
-//                 const cActivity = entities[0];
-//                 const cTodayDateStr = entities[1];
-//                 const cTodayTimeStr = entities[2];
-//                 const cUserId = entities[3];
-//
-//                 $.post("index", {
-//                     "activity": cActivity,
-//                     "date": cTodayDateStr,
-//                     "time": cTodayTimeStr,
-//                     "user": cUserId
-//                 }).fail(function () {
-//                     notSavedActivityValue = addActivityValue(notSavedActivityValue, v);
-//                 }).done(function () {
-//
-//                 })
-//             }
-//         });
-//         eraseCookie('ac');
-//         setCookie('ac', '');
-//
-//         if (notSavedActivityValue !== "") {
-//             setCookie('ac', notSavedActivityValue);
-//         }
-//     }
-// }
-//
-// function saveResultFromCookie() {
-//     const myDateTimeFromCookieValue = getCookie("acc");
-//     if (myDateTimeFromCookieValue !== null && myDateTimeFromCookieValue.trim() !== "") {
-//         let myDateTimeFromCookie = JSON.parse(myDateTimeFromCookieValue);
-//         if (myDateTimeFromCookie !== null) {
-//             $.each(myDateTimeFromCookie, function (i, v) {
-//                 const cActivity = v.activityId;
-//                 const cTodayDate = new Date(v.todayDate);
-//                 const cTodayTime = new Date(v.todayTime);
-//                 const cUserId = v.userId;
-//
-//
-//                 saveResult(cActivity, todayDateStr, todayTimeStr, cUserId);
-//             })
-//         }
-//     }
-// }
 
 function addLeadZeroToTime(date, utc) {
 
@@ -497,31 +376,14 @@ function loadAccordion(callBackFunc) {
         callBackFunc();
         showLoading(false);
     }
-
-
-    // accordion.load("index/accordion", function (responseText, textStatus) {
-    //     if (textStatus === "error") {
-    //         loadAccordionErrorCounter++;
-    //         if (loadAccordionErrorCounter <= 3) {
-    //             loadAccordion(callBackFunc);
-    //         }
-    //     } else {
-    //         loadAccordionErrorCounter = 0;
-    //         callBackFunc();
-    //     }
-    // });
 }
 
 function showUserAuthDialog(hasCloseBtn) {
     const userAuthDialog = $('#userAuthDialog');
-    // userAuthDialog.load("index/user", function() {
-    //     $('#authDialog').modal();
-    // });
-    // localStorage.removeItem("users");
+
     let users = localStorage.getItem("users");
 
     if (users === null) {
-        console.log("null")
         showLoading(true);
 
         $.ajax({
@@ -538,7 +400,6 @@ function showUserAuthDialog(hasCloseBtn) {
                 if (hasCloseBtn) {
                     btnClose.removeClass('invisible');
                 } else {
-                    console.log("invisible");
                     btnClose.addClass('invisible');
                 }
 
@@ -561,14 +422,11 @@ function showUserAuthDialog(hasCloseBtn) {
 
 }
 
-function createUserCookie() {
+function createLocalStorage() {
     $('#authDialog').modal('hide');
     const user = $('#user option:selected');
     const userId = user.val();
     const userName = user.text().trim();
-
-    // setCookie('ui', userId, 365);
-    // setCookie('un', userName, 365);
 
     localStorage.setItem('ui', userId);
     localStorage.setItem('un', userName);
@@ -596,8 +454,8 @@ function getCookie(name) {
     const ca = document.cookie.split(';');
     for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
-        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
     }
     return null;
 }
@@ -606,13 +464,13 @@ function eraseCookie(name) {
     document.cookie = name + '=; Max-Age=-99999999;';
 }
 
-function checkUserCookie() {
-    const userCookie  = localStorage.getItem('ui');//  getCookie('ui');
+function checkLocalStorage() {
+    const userLocalStorage  = localStorage.getItem('ui');//
 
-    if (userCookie === null || userCookie.trim() === '') {
+    if (userLocalStorage === null || userLocalStorage.trim() === '') {
         showUserAuthDialog(false);
     } else {
-        let userName = localStorage.getItem('un'); //getCookie('un');
+        let userName = localStorage.getItem('un');
         $('#userName').text("Пользователь " + userName);
     }
 }

@@ -2,12 +2,14 @@ package ru.sber.dayphoto.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import ru.sber.dayphoto.model.User;
 import ru.sber.dayphoto.model.User;
 
 import java.util.List;
 
+@Component
 @RequestMapping("/context/user")
 @FeignClient(name="photodata", url="${photodata.ribbon.listOfServers}")
 public interface UserFeign  {

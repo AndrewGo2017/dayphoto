@@ -2,6 +2,7 @@ package ru.sber.dayphoto.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import ru.sber.dayphoto.model.Statistic;
 import ru.sber.dayphoto.to.StatisticTo;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+@Component
 @RequestMapping("/context/statistic")
 @FeignClient(name="photodata", url="${photodata.ribbon.listOfServers}")
 public interface StatisticFeign {

@@ -2,11 +2,13 @@ package ru.sber.dayphoto.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import ru.sber.dayphoto.model.ActivityGroup;
 
 import java.util.List;
 
+@Component
 @RequestMapping("/context/activityGroup")
 @FeignClient(name="photodata", url="${photodata.ribbon.listOfServers}")
 public interface ActivityGroupFeign {

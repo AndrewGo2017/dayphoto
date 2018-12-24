@@ -72,7 +72,7 @@
                         <label class="control-label col-xs-3">Группа</label>
 
                         <div class="col-xs-9">
-                            <!--/*@thymesVar id="user" type="java.util.List<ru.sber.dayphoto.model.User>"*/-->
+                            <!--/*@thymesVar id="users" type="java.util.List<ru.sber.dayphoto.model.User>"*/-->
                             <select class="btn btn-secondary dropdown-toggle dialog-data form-control" name="user" id="user">
                                 <option th:each="user : ${users}"
                                         th:value="${user.id}"
@@ -85,7 +85,7 @@
 
                     <div class="form-group">
                         <div class="col-xs-offset-3 col-xs-9">
-                            <button type="button" onclick="createUserCookie()" class="btn btn-secondary">
+                            <button type="button" onclick="createLocalStorage()" class="btn btn-secondary">
                                 <span class="glyphicon glyphicon-ok" aria-hidden="true">Сохранить</span>
                             </button>
                         </div>
