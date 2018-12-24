@@ -77,8 +77,8 @@ $(function () {
     $('#refreshAllBtn').on('click', function (e) {
         e.preventDefault();
 
-        const onSaveResult = "onRefresh()";
-        showConfirm("Подтверждение", "Вы уверены, что хотите обновить данные приложения?", onSaveResult);
+        const onRefresh = "onRefresh()";
+        showConfirm("Подтверждение", "Вы уверены, что хотите обновить данные приложения?", onRefresh);
     });
 
     loadAccordion(onStart);
@@ -93,7 +93,7 @@ function onRefresh() {
 function onSaveResult() {
     $('#confirmDialog').modal('hide');
 
-    localStorage.removeItem("ac");
+    // localStorage.removeItem("ac");
 
     const acc = localStorage.getItem("acc");
     if (acc !== null) {
@@ -233,6 +233,7 @@ function saveResultList(resultList) {
         data: resultList,
         success: function () {
             $('#totalTimeInscription').css('color', 'darkgray');
+            localStorage.removeItem("acc");
         },
         error: function (xhr) {
             if (errorSaveResultListCounter <= 3) {
@@ -248,7 +249,6 @@ function saveResultList(resultList) {
         },
         complete: function () {
             fillTotalTime();
-            localStorage.removeItem("acc");
             showLoading(false);
         },
     });
