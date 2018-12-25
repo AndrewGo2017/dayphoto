@@ -162,13 +162,15 @@ function showMessage(header, text) {
 function showLoading(isRunning) {
     const loadingDialog = $('#loadingDialog');
     if (isRunning) {
-        console.log("show loading");
-        loadingDialog.modal({
-            backdrop: 'static',
-            keyboard: false
-        });
+        console.log("show");
+        setTimeout(function () {
+            loadingDialog.modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        }, 500);
     } else {
-        console.log("close loading");
+        console.log("hide");
         setTimeout(function () {
             loadingDialog.modal('hide')
         }, 500);
