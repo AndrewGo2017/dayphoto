@@ -159,20 +159,28 @@ function showMessage(header, text) {
     $('#messageDialog').modal();
 }
 
+let loadingShown = false;
 function showLoading(isRunning) {
     const loadingDialog = $('#loadingDialog');
     if (isRunning) {
+        loadingShown = true;
         console.log("show");
         setTimeout(function () {
-            loadingDialog.modal({
-                backdrop: 'static',
-                keyboard: false
-            });
+            if (loadingShown){
+                loadingDialog.modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+            }
         }, 500);
     } else {
+        loadingShown = false;
         console.log("hide");
         setTimeout(function () {
-            loadingDialog.modal('hide')
+            if (!loadingShown){
+                loadingDialog.modal('hide');
+            }
+
         }, 500);
     }
 }
