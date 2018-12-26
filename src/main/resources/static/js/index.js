@@ -422,7 +422,7 @@ function showUserAuthDialog(hasCloseBtn) {
 
 }
 
-function createLocalStorage() {
+function createUserLocalStorage() {
     $('#authDialog').modal('hide');
     const user = $('#user option:selected');
     const userId = user.val();
