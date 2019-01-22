@@ -297,18 +297,17 @@ function addLeadZeroToTime(date, utc) {
     let m = date.getMinutes().toString().length === 2 ? date.getMinutes() : "0" + date.getMinutes();
     let s = date.getSeconds().toString().length === 2 ? date.getSeconds() : "0" + date.getSeconds();
 
-    //weird behaviour on server...
-    h = h.length === 2 ? h : h.toString().substring(1);
-    m = m.length === 2 ? m : m.toString().substring(1);
-    s = s.length === 2 ? s : s.toString().substring(1);
-
     return h + ":" + m + ":" + s
 }
 
 function addLeadZeroToDate(date, del) {
     const d = date.getDate().toString().length === 2 ? date.getDate() : "0" + date.getDate();
-    const m = (date.getMonth() + 1).toString().length === 2 ? date.getMonth() + 1 : "0" + (date.getMonth() + 1);
+    const m = (date.getMonth() + 1).toString().length === 2 ? (+date.getMonth() + 1) : "0" + (+date.getMonth() + 1);
     const y = date.getFullYear();
+
+    console.log("date.getMonth() ", date.getMonth() );
+    console.log("+date.getMonth() ", +date.getMonth() );
+    console.log("(date.getMonth() + 1 ", date.getMonth() );
 
     return d + del + m + del + y
 }
