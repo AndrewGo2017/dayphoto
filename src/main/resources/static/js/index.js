@@ -294,8 +294,13 @@ function addLeadZeroToTime(date, utc) {
         h = date.getHours().toString().length === 2 ? date.getHours() : "0" + date.getHours();
     }
 
-    const m = date.getMinutes().toString().length === 2 ? date.getMinutes() : "0" + date.getMinutes();
-    const s = date.getSeconds().toString().length === 2 ? date.getSeconds() : "0" + date.getSeconds();
+    let m = date.getMinutes().toString().length === 2 ? date.getMinutes() : "0" + date.getMinutes();
+    let s = date.getSeconds().toString().length === 2 ? date.getSeconds() : "0" + date.getSeconds();
+
+    //weird behaviour on server...
+    h = h.length === 2 ? h : h.toString().substring(1);
+    m = m.length === 2 ? m : m.toString().substring(1);
+    s = s.length === 2 ? s : s.toString().substring(1);
 
     return h + ":" + m + ":" + s
 }
