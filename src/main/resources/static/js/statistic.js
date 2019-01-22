@@ -16,9 +16,6 @@ function changeResult() {
     const datetimepickerFrom = $('#datetimepickerFromText').val();
     const datetimepickerTo = $('#datetimepickerToText').val();
 
-    console.log("datetimepickerFrom", datetimepickerFrom);
-    console.log("datetimepickerTo", datetimepickerTo);
-
     if (datetimepickerFrom === '' || datetimepickerTo === '')
         return;
 

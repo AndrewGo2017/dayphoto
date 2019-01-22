@@ -164,7 +164,6 @@ function showLoading(isRunning) {
     const loadingDialog = $('#loadingDialog');
     if (isRunning) {
         loadingShown = true;
-        console.log("show");
         setTimeout(function () {
             if (loadingShown){
                 loadingDialog.modal({
@@ -175,7 +174,6 @@ function showLoading(isRunning) {
         }, 500);
     } else {
         loadingShown = false;
-        console.log("hide");
         setTimeout(function () {
             if (!loadingShown){
                 loadingDialog.modal('hide');
